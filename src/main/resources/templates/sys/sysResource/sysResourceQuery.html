@@ -1,0 +1,237 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sk="http://www.w3.org/1999/xhtml">
+<head th:replace="common/common :: common_header(~{::title},~{},~{},~{})">
+    <!--title,metas,links,scripts-->
+    <title>系统资源列表</title>
+</head>
+<body class="pos-r">
+
+<!--左边区域开始-->
+<sk:menuTree id="leftTree" scCode="sys_resource_tree"/>
+<!--左边区域结束-->
+
+<!--*********************-->
+
+<!--右边区域开始-->
+<div style="margin-left:200px;">
+    <!--刷新栏开始-->
+    <sk:navBar navText="系统资源管理,系统资源列表"/>
+    <!--刷新栏结束-->
+
+    <!--*********************-->
+
+    <!--数据显示开始-->
+    <div class="page-container">
+
+        <!--搜索栏开始-->
+        <!--<div class="text-c">-->
+        <div>
+            父节点查询：
+            <span class="skin-minimal">
+                <div class="radio-box" style="padding: 0;">
+                    <input name="parentRadio" type="radio" id="sex-1"
+                           checked value="0">
+                    <label for="sex-1">是</label>
+                </div>
+                <div class="radio-box" style="padding-left: 0;">
+                    <input type="radio" id="sex-2" name="parentRadio" value="1">
+                    <label for="sex-2">否</label>
+                </div>
+            </span>
+            资源名：
+            <sk:input style="width:200px" placeholder="输入资源名" id="rName"/>
+            <sk:button class="btn-success" id="searchBtn" text="查询" dictType="oprt_icon" dictCode="04"/>
+        </div>
+        <!--搜索栏结束-->
+
+        <!--*********************-->
+
+        <!--按钮栏开始-->
+        <div class="cl pd-5 bg-1 bk-gray mt-20">
+            <span class="l">
+                 <sk:aBtn id="addBtn" class="btn-primary" text="添加资源" dictType="oprt_icon" dictCode="01"/>
+                 <sk:aBtn onclick="batchDel()" class="btn-danger" text="批量删除" dictType="oprt_icon" dictCode="03"/>
+                 <sk:aBtn onclick="batchRealDel()" class="btn-danger" text="批量硬删除" dictType="oprt_icon" dictCode="03"/>
+            </span>
+        </div>
+        <!--按钮栏结束-->
+
+        <!--*********************-->
+
+        <!--表格区域开始-->
+        <div class="mt-20">
+            <table id="skDataTable" class="table table-border table-bordered table-hover table-bg table-sort">
+                <thead>
+                    <tr class="text-c">
+                        <th><input type="checkbox" id="checkbox" name="checkbox" class="checkall"/></th>
+                        <th>资源url</th>
+                        <th>资源名</th>
+                        <th>父菜单</th>
+                        <th>类型</th>
+                        <th>级别</th>
+                        <th>排序</th>
+                        <th>描述</th>
+                        <th>创建人</th>
+                        <th>创建时间</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                        <!--<th width="25"><input type="checkbox" id="checkbox" name="checkbox" class="checkall"/></th>-->
+                        <!--<th width="60">权限标识</th>-->
+                        <!--<th width="60">菜单名</th>-->
+                        <!--<th width="40">父菜单</th>-->
+                        <!--<th width="60">类型</th>-->
+                        <!--<th width="80">级别</th>-->
+                        <!--<th width="80">排序</th>-->
+                        <!--<th width="80">描述</th>-->
+                        <!--<th width="80">创建人</th>-->
+                        <!--<th width="80">创建时间</th>-->
+                        <!--<th width="50">状态</th>-->
+                        <!--<th width="500">操作</th>-->
+                    </tr>
+                </thead>
+                <tbody class="text-c">
+                <!--<tr style="text-align:center">-->
+                <!--<td colspan="16">暂无数据</td>-->
+                <!--</tr>-->
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--数据显示结束-->
+
+    <!--*********************-->
+</div>
+
+
+<!--_footer 作为公共模版分离出去-->
+<div th:replace="common/common :: common_footer">
+</div>
+<!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/My97DatePicker/4.8/WdatePicker.js}"></script>
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/datatables/1.10.0/jquery.dataTables.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/laypage/1.2/laypage.js}"></script>
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/zTree/v3/js/jquery.ztree.all-3.5.min.js}"></script>
+<script th:inline="none" type="text/javascript">
+
+    //主键
+    var pk = 'rId';
+    //模块标题
+    var modelTile = '权限';
+    //修改
+    function to_edit(id) {
+        var url = "initUpdate?" + pk + "=" + id;
+        requestPage(url,{'oprt':skConst.Oprt.UPDATE_OPRT},'修改'+modelTile, 800, 600, function () {//结束事件
+            _dataTables.ajax.reload();
+        });
+    }
+
+    //初始化tabel
+    var _dataTables;
+
+    //    var isSearch = false;
+    function initTabel() {
+        _dataTables = SkDataTable('#skDataTable',{
+            "columns": [
+                {
+                    "data": function (dd) {
+                        return '<input type="checkbox" id="rId" name="rId" class="checkchild"  value="' + dd.rId + '" />';
+                    }
+                },
+                {"data": "rUrl"},
+                {"data": "rName"},
+                {"data": "parentName"},
+                {"data": "rType"},
+                {"data": "rlevelStr"},
+                {"data": "rSort"},
+                {"data": "descri"},
+                {"data": "userName"},
+
+                {
+                    "data": "createTime", "render": function (data) {
+                        //时间格式化
+                        return moment(data).format(skConst.DEFALT_DATE_FORMAT);
+                    }
+                },
+                {
+                    "data": "recordStatus", "render": function (data) {
+                        var htmlStr = '<div id="td-status"><span class="label ';
+                        if (data == skConst.RecordStatus.ABLE) {
+                            //启用
+                            htmlStr += 'label-success radius">';
+
+                        } else {
+                            //禁用
+                            htmlStr += 'radius">';
+                        }
+                        $.each(recordStatus, function (index, item) {
+                            //                            console.log(JSON.stringify(item))
+                            if (item.code == data) {
+                                htmlStr += item.name + '</span></div>';
+                                return false;
+                            }
+                        });
+                        return htmlStr;
+                    }
+                },
+                {
+                    "data": function (dd) {
+                        var str = '<div id="td-manage">';
+                        if (dd.recordStatus == skConst.RecordStatus.ABLE) {
+                            str += '<a title="禁用" href="javascript:;" onclick="updateDisableRs(this,' + dd[pk] + ',\'' +pk+'\')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe631;</i></a>';
+                        } else {
+                            str += '<a title="启用" href="javascript:;" onclick="updateAbleRs(this,' + dd[pk] + ',\''+pk+'\')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe615;</i></a>';
+                        }
+
+                        str += '<a title="修改" href="javascript:;" onclick="to_edit(' + dd[pk] + ')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>';
+                        str += '<a title="删除" href="javascript:;" onclick="to_del(this,' + dd[pk] + ')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>';
+                        str += '</div>';
+                        return str;
+                    }
+                }
+            ],
+            "ajax": {
+                // "url": "query",
+                // "type": "POST",
+                "data": function (d) {
+                    var val=$(':radio[name="parentRadio"]:checked').val();
+                    if (val == '0'){
+                        d['sysResourceCustom.parentId'] = $("#leftTreeRootId").val().trim();
+                    }
+                    d['sysResourceCustom.rName'] = $("#rName").val().trim();
+                }
+            },
+        });
+    }
+
+    /*刷新table*/
+    function drawTable() {
+        _dataTables.draw();
+    }
+
+    $(function () {
+
+        //添加按钮
+        $('#addBtn').on('click', function () {
+            var url = "initAdd";
+            requestPage(url,{'oprt':skConst.Oprt.ADD_OPRT},'添加'+modelTile, 800, 600, function () {//结束事件
+                // _dataTables.ajax.reload();
+                location.reload();
+            });
+        });
+
+        //搜索按钮点击事件
+        $('#searchBtn').on('click', function () {
+//            $("input[type=checkbox][name='checkbox']").prop('checked', false);
+            _dataTables.ajax.reload();
+        });
+
+    });
+
+
+</script>
+</body>
+</html>

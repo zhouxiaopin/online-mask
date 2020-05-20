@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sk="http://www.sk.com/thymeleaf/sk">
+<head th:replace="common/common :: common_header(~{::title},~{},~{},~{})">
+    <!--title,metas,links,scripts-->
+    <title>报修管理</title>
+</head>
+<body>
+<article class="page-container">
+    <form class="form form-horizontal" id="sysPermisForm">
+        <!--<form th:action="${oprt}" method="post" class="form form-horizontal" id="sysUserForm">-->
+        <div>
+            <label id="retMsg" style="display:block;text-align: center;color: #FF0000"
+                   th:inline="text">[[${msg}]]</label>
+            <input type="hidden" id="rpId" name="rpId" th:value="${obj.rpId}" value=""/>
+        </div>
+
+        <div th:switch="${oprt}">
+
+            <!-- ********************** -->
+            <!--详情开始-->
+            <div th:case="queryDetail">
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="报修编号："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.rpNo}" id="rpNo" name="rpNo" th:disabled="true"/>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="类型："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.rpTypeStr}" id="rpType" name="rpType" th:disabled="true"/>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="位置："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.rpPosiStoreyStr}" id="rpPosiStoreyStr" name="rpPosiStoreyStr" th:disabled="true"/>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="联系人："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.linkPerson}" name="linkPerson" th:disabled="true"/>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="联系人电话："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.linkPhone}" name="linkPhone" th:disabled="true"/>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="报修人："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.rpPerson}" name="rpPerson" th:disabled="true"/>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="报修人部门："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.rpDepart}"  name="rpDepart" th:disabled="true"/>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="报修人电话："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.rpPhone}" name="rpPhone" th:disabled="true"/>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="维修人："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.wxPerson}" name="wxPerson" th:disabled="true"/>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="处理时间："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <!--<sk:input th:value="${obj.handleTime}" name="handleTime" th:disabled="true"/>-->
+                        <sk:input th:value="${#dates.format(obj.handleTime, 'YYYY-MM-DD HH:mm:ss')}" name="handleTime" th:disabled="true"/>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="故障图片："/>
+                    <div class="formControls col-xs-10 col-sm-10">
+                        <span  th:each="item: ${obj.breakdownPics}">
+                           <img width="100" height="100" class="picture-thumb" th:src="${item}">
+                        </span>
+                    </div>
+
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="维修图片："/>
+                    <div class="formControls col-xs-10 col-sm-10">
+                        <span  th:each="item: ${obj.wxPics}">
+                           <img width="100" height="100" class="picture-thumb" th:src="${item}">
+                        </span>
+                    </div>
+
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="描述："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <textarea name="breakdownDesc" cols="22" rows="4" class="textarea"
+                                  onKeyUp="$.Huitextarealength(this,100)"
+                                  th:inline="text" th:disabled="true">
+                            [[${obj.breakdownDesc}]]
+                        </textarea>
+                        <p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="意见："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <textarea name="rpIdea" cols="22" rows="4" class="textarea"
+                                  onKeyUp="$.Huitextarealength(this,100)"
+                                  th:inline="text" th:disabled="true">
+                            [[${obj.rpIdea}]]
+                        </textarea>
+                        <p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>
+                    </div>
+                </div>
+            </div>
+            <!--详情介绍-->
+
+            <!-- ********************** -->
+            <!--分发开始-->
+            <div th:case="distr">
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="报修编号："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.rpNo}" id="rpNo" name="rpNo" th:disabled="true"/>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="类型："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.rpTypeStr}" id="rpType" name="rpType" th:disabled="true"/>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="位置："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.rpPosiStoreyStr}" id="rpPosiStoreyStr" name="rpPosiStoreyStr" th:disabled="true"/>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="联系人："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.linkPerson}" name="linkPerson" th:disabled="true"/>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="联系人电话："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.linkPhone}" name="linkPhone" th:disabled="true"/>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="报修人："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.rpPerson}" name="rpPerson" th:disabled="true"/>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="报修人部门："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.rpDepart}"  name="rpDepart" th:disabled="true"/>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="报修人电话："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.rpPhone}" name="rpPhone" th:disabled="true"/>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="维修人："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <!--<sk:treeSelect id="parentId" name="parentId" th:value="${obj.parentId}" type="radio" scCode="org_tree"/>-->
+                        <!--<sk:treeSelect id="wxEmpId" name="wxEmpId" th:value="${obj.wxEmpId}" type="radio" useOutData="true" exeMethod="getEmpTree" parentCheck="false"/>-->
+                        <sk:treeSelect id="wxEmpId" name="wxEmpId" th:value="${obj.wxEmpId}" type="radio" useOutData="true" exeMethod="getEmpTreeByPermis" parentCheck="false"/>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="描述："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <textarea name="breakdownDesc" cols="22" rows="4" class="textarea"
+                                  onKeyUp="$.Huitextarealength(this,100)"
+                                  th:inline="text" th:disabled="true">
+                            [[${obj.breakdownDesc}]]
+                        </textarea>
+                        <p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>
+                    </div>
+                </div>
+
+            </div>
+            <!--分发结束-->
+
+
+            <!-- ********************** -->
+
+            <!--意见开始-->
+            <div th:case="idea">
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="报修编号："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.rpNo}" id="rpNo" name="rpNo" th:disabled="true"/>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="类型："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.rpTypeStr}" id="rpType" name="rpType" th:disabled="true"/>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="位置："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.rpPosiStoreyStr}" id="rpPosiStoreyStr" name="rpPosiStoreyStr" th:disabled="true"/>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="联系人："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.linkPerson}" name="linkPerson" th:disabled="true"/>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="联系人电话："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.linkPhone}" name="linkPhone" th:disabled="true"/>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="报修人："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.rpPerson}" name="rpPerson" th:disabled="true"/>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="报修人部门："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.rpDepart}"  name="rpDepart" th:disabled="true"/>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="报修人电话："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.rpPhone}" name="rpPhone" th:disabled="true"/>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="维修人："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.wxPerson}" name="wxPerson" th:disabled="true"/>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="处理时间："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <!--<sk:input th:value="${obj.handleTime}" name="handleTime" th:disabled="true"/>-->
+                        <sk:input th:value="${#dates.format(obj.handleTime, 'YYYY-MM-DD HH:mm:ss')}" name="handleTime" th:disabled="true"/>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="描述："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <textarea name="breakdownDesc" cols="22" rows="4" class="textarea"
+                                  onKeyUp="$.Huitextarealength(this,100)"
+                                  th:inline="text" th:disabled="true">
+                            [[${obj.breakdownDesc}]]
+                        </textarea>
+                        <p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="意见："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <textarea name="rpIdea" cols="22" rows="4" class="textarea"
+                                  onKeyUp="$.Huitextarealength(this,100)"
+                                  th:inline="text">
+                            [[${obj.rpIdea}]]
+                        </textarea>
+                        <p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>
+                    </div>
+                </div>
+            </div>
+            <!--意见结束-->
+
+            <!-- ********************** -->
+
+        </div>
+
+
+        <div th:if="${oprt != 'queryDetail'}" class="row cl">
+            <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+                <sk:button class="btn-success" type="reset" text="&nbsp;&nbsp;重置&nbsp;&nbsp;"/>
+                <sk:button class="btn-primary" type="submit" text="&nbsp;&nbsp;提交&nbsp;&nbsp;"/>
+            </div>
+        </div>
+    </form>
+</article>
+
+<!--_footer 作为公共模版分离出去-->
+<div th:replace="common/common :: common_footer">
+</div>
+<!--/_footer 作为公共模版分离出去-->
+
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/My97DatePicker/4.8/WdatePicker.js}"></script>
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/jquery.validation/1.14.0/jquery.validate.js}"></script>
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/jquery.validation/1.14.0/validate-methods.js}"></script>
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/jquery.validation/1.14.0/messages_zh.js}"></script>
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/zTree/v3/js/jquery.ztree.all-3.5.min.js}"></script>
+
+<script type="text/javascript" th:inline="javascript">
+    var oprt = [[${oprt}]];
+</script>
+<script type="text/javascript">
+    $(function () {
+        $('.skin-minimal input').iCheck({
+            checkboxClass: 'icheckbox-blue',
+            radioClass: 'iradio-blue',
+            increaseArea: '20%'
+        });
+
+        $("#sysPermisForm").validate({
+            rules: {
+                orgNo: {
+                    required: true
+                },
+                orgName: {
+                    required: true
+                },
+
+            },
+            onkeyup: false,
+            focusCleanup: true,
+            success: "valid",
+            submitHandler: function (form) {
+                /*$(form).ajaxSubmit();
+                 parent.location.reload();
+                 var index = parent.layer.getFrameIndex(window.name);
+                 //parent.$('.btn-refresh').click();
+                 parent.layer.close(index);*/
+                var url = oprt;
+                var param = $(form).serialize();
+                sk.ajaxRequest(url, param, function (r) {
+                    if (r.code == '0') {
+                        sk.successMsg(r.msg);
+                        if (oprt != 'add') {
+                            setTimeout(function () {
+                                // parent.location.reload();
+//                                var index = parent.layer.getFrameIndex(window.name);
+//                                parent.layer.close(index);
+                                layer_close();
+                            }, 800);
+                        }
+                    } else {
+                        sk.failMsg(r.msg);
+                    }
+
+                });
+//                return false; // 阻止表单自动提交事件
+            }
+        });
+
+    });
+</script>
+
+
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

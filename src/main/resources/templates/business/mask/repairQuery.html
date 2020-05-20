@@ -1,0 +1,233 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sk="http://www.sk.com/thymeleaf/sk">
+<head th:replace="common/common :: common_header(~{::title},~{},~{},~{})">
+    <!--title,metas,links,scripts-->
+    <title>报修列表</title>
+</head>
+<body>
+
+<!--刷新栏开始-->
+<sk:navBar th:attr="navText='报修管理,报修列表'" />
+<!--刷新栏结束-->
+
+<!--*********************-->
+
+<!--数据显示开始-->
+<div class="page-container">
+
+    <!--搜索栏开始-->
+    <!--<div class="text-c">-->
+    <div>
+        报修编号：
+        <sk:input style="width:200px" placeholder="输入报修编号" id="rpNo"/>
+        <sk:button class="btn-success" id="searchBtn" text="查询" dictType="oprt_icon" dictCode="04"/>
+    </div>
+    <!--搜索栏结束-->
+
+    <!--*********************-->
+
+    <!--按钮栏开始-->
+    <!--<div class="cl pd-5 bg-1 bk-gray mt-20">-->
+        <!--<span class="l">-->
+             <!--<sk:aBtn onclick="batchDel()" class="btn-danger" text="批量删除" dictType="oprt_icon" dictCode="03"/>-->
+             <!--<sk:aBtn onclick="batchRealDel()" class="btn-danger" text="批量硬删除" dictType="oprt_icon" dictCode="03"/>-->
+        <!--</span>-->
+    <!--</div>-->
+    <!--按钮栏结束-->
+
+    <!--*********************-->
+
+    <!--表格区域开始-->
+    <div class="mt-20">
+        <table id="skDataTable" class="table table-border table-bordered table-hover table-bg table-sort">
+            <thead>
+            <tr class="text-c">
+                <th><input type="checkbox" id="checkbox" name="checkbox" class="checkall"/></th>
+                <th>报修编号</th>
+                <th>类型</th>
+                <th>位置</th>
+                <!--<th>联系人</th>-->
+                <!--<th>联系人电话</th>-->
+                <th>报修人</th>
+                <th>报修人部门</th>
+                <th>报修人电话</th>
+                <th>维修人</th>
+                <th>处理时间</th>
+                <th>报修时间</th>
+                <th>意见</th>
+                <th width="100">描述</th>
+                <th>状态</th>
+                <th>操作</th>
+
+            </tr>
+            </thead>
+            <tbody class="text-c">
+            <!--<tr style="text-align:center">-->
+            <!--<td colspan="16">暂无数据</td>-->
+            <!--</tr>-->
+
+
+            </tbody>
+        </table>
+    </div>
+</div>
+<!--数据显示结束-->
+
+<!--*********************-->
+
+
+<!--_footer 作为公共模版分离出去-->
+<div th:replace="common/common :: common_footer">
+</div>
+<!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/My97DatePicker/4.8/WdatePicker.js}"></script>
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/datatables/1.10.0/jquery.dataTables.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/laypage/1.2/laypage.js}"></script>
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/zTree/v3/js/jquery.ztree.all-3.5.min.js}"></script>
+<script th:inline="none" type="text/javascript">
+
+    //主键
+    var pk = 'rpId';
+    //模块标题
+    var modelTile = '报修';
+    //修改
+    // function to_edit(id) {
+    //     var url = "initUpdate?" + pk + "=" + id;
+    //     requestPage(url,{'oprt':skConst.Oprt.UPDATE_OPRT},'修改'+modelTile, 800, 600, function () {//结束事件
+    //         _dataTables.ajax.reload();
+    //     });
+    // }
+    //查看
+    function to_queryDetail(id) {
+        var url = "initQueryDetail?" + pk + "=" + id;
+        requestPage(url,{'oprt':skConst.Oprt.repair.QUERYDETAIL},'查看'+modelTile, 800, 600, function () {//结束事件
+            _dataTables.ajax.reload();
+        });
+    }
+    //分发
+    function to_distr(id) {
+        var url = "initDistr?" + pk + "=" + id;
+        requestPage(url,{'oprt':skConst.Oprt.repair.DISTR},'分发'+modelTile, 800, 600, function () {//结束事件
+            _dataTables.ajax.reload();
+        });
+    }
+    //意见
+    function to_idea(id) {
+        var url = "initIdea?" + pk + "=" + id;
+        requestPage(url,{'oprt':skConst.Oprt.repair.IDEA},modelTile+"意见", 800, 600, function () {//结束事件
+            _dataTables.ajax.reload();
+        });
+    }
+    //初始化tabel
+    var _dataTables;
+
+    //    var isSearch = false;
+    function initTabel() {
+        _dataTables = SkDataTable('#skDataTable',{
+            "columns": [
+                {
+                    "data": function (dd) {
+                        return '<input type="checkbox" id="rpId" name="rpId" class="checkchild"  value="' + dd[pk] + '" />';
+                    }
+                },
+                {"data": "rpNo"},
+                {"data": "rpTypeStr"},
+                {"data": "rpPosiStoreyStr"},
+                // {"data": "linkPerson"},
+                // {"data": "linkPhone"},
+                {"data": "rpPerson"},
+                {"data": "rpDepart"},
+                {"data": "rpPhone"},
+                {"data": "wxPerson"},
+                {
+                    "data": "handleTime", "render": function (data) {
+                        //时间格式化
+                        if (data){
+                            return moment(data).format(skConst.DEFALT_DATE_FORMAT);
+                        }
+                        return '';
+                    }
+                },
+                {
+                    "data": "createTime", "render": function (data) {
+                        //时间格式化
+                        return moment(data).format(skConst.DEFALT_DATE_FORMAT);
+                    }
+                },
+                {"data": "rpIdea"},
+                {"data": "breakdownDesc"},
+                {
+                    "data": "recordStatusStr", "render": function (data) {
+                        try {
+                            var datas = data.split(skConst.DEFAULT_SPLIT_SYMBOL);
+                            var htmlStr = '<div id="td-status"><span class="label ';
+                            if (datas[1]) {
+                                //启用
+                                htmlStr += datas[1];
+
+                            }
+                            htmlStr += ' radius">'+datas[0] + '</span></div>';
+                            return htmlStr;
+                        }catch (e) {
+                            return '未知';
+                        }
+
+                    }
+                },
+                {
+                    "data": function (dd) {
+                        var str = '<div id="td-manage">';
+                        // if (dd.recordStatus == skConst.RecordStatus.ABLE) {
+                        //     str += '<a title="禁用" href="javascript:;" onclick="updateDisableRs(this,' + dd[pk] + ',\'' +pk+'\')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe631;</i></a>';
+                        // } else {
+                        //     str += '<a title="启用" href="javascript:;" onclick="updateAbleRs(this,' + dd[pk] + ',\''+pk+'\')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe615;</i></a>';
+                        // }
+
+                        str += '<a title="查看" href="javascript:;" onclick="to_queryDetail(' + dd[pk] + ')" class="ml-5">查看</i></a>';
+                        str += '<a title="分发" href="javascript:;" onclick="to_distr(' + dd[pk] + ')" class="ml-5">分发</i></a>';
+                        str += '<a title="意见" href="javascript:;" onclick="to_idea(' + dd[pk] + ')" class="ml-5">意见</i></a>';
+                        // str += '<a title="分发" href="javascript:;" onclick="to_edit(' + dd[pk] + ')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>';
+                        // str += '<a title="删除" href="javascript:;" onclick="to_del(this,' + dd[pk]+ ')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>';
+                        str += '</div>';
+                        return str;
+                    }
+                }
+            ],
+            "ajax": {
+                // "url": "query",
+                // "type": "POST",
+                "data": function (d) {
+                    // var val=$(':radio[name="parentRadio"]:checked').val();
+                    // if (val == '0'){
+                    //     d['organCustom.parentId'] = $("#leftTreeRootId").val().trim();
+                    // }
+                    d['repairCustom.rpNo'] = $("#rpNo").val().trim();
+                }
+            },
+        });
+    }
+
+    /*刷新table*/
+    function drawTable() {
+        _dataTables.draw();
+    }
+
+    $(function () {
+
+
+        //搜索按钮点击事件
+        $('#searchBtn').on('click', function () {
+//            $("input[type=checkbox][name='checkbox']").prop('checked', false);
+            _dataTables.ajax.reload();
+        });
+
+        initTabel();
+
+    });
+
+
+</script>
+</body>
+</html>

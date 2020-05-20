@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.sk.mask.business.mapper.CategoryMapper">
+  <resultMap id="BaseResultMap" type="cn.sk.mask.business.pojo.Category">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="parent_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sort" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="record_status" javaType="java.lang.String" jdbcType="CHAR" />
+      <arg column="expand1" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="expand2" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="expand3" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    c1.id, c1.parent_id, c1.name, c1.sort, c1.record_status, c1.expand1, c1.expand2, c1.expand3, c1.update_time,
+    c1.create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_mask_category c1
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_mask_category
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.sk.mask.business.pojo.Category">
+    insert into tb_mask_category (id, parent_id, name, 
+      sort, record_status, expand1, 
+      expand2, expand3, update_time, 
+      create_time)
+    values (#{id,jdbcType=INTEGER}, #{parentId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
+      #{sort,jdbcType=INTEGER}, #{recordStatus,jdbcType=CHAR}, #{expand1,jdbcType=VARCHAR}, 
+      #{expand2,jdbcType=VARCHAR}, #{expand3,jdbcType=VARCHAR}, now(),
+      now())
+  </insert>
+  <insert id="insertSelective" parameterType="cn.sk.mask.business.pojo.Category">
+    insert into tb_mask_category
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="parentId != null">
+        parent_id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="sort != null">
+        sort,
+      </if>
+      <if test="recordStatus != null">
+        record_status,
+      </if>
+      <if test="expand1 != null">
+        expand1,
+      </if>
+      <if test="expand2 != null">
+        expand2,
+      </if>
+      <if test="expand3 != null">
+        expand3,
+      </if>
+        update_time,
+        create_time,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="parentId != null">
+        #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null">
+        #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="recordStatus != null">
+        #{recordStatus,jdbcType=CHAR},
+      </if>
+      <if test="expand1 != null">
+        #{expand1,jdbcType=VARCHAR},
+      </if>
+      <if test="expand2 != null">
+        #{expand2,jdbcType=VARCHAR},
+      </if>
+      <if test="expand3 != null">
+        #{expand3,jdbcType=VARCHAR},
+      </if>
+      now(),
+        now(),
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.sk.mask.business.pojo.Category">
+    update tb_mask_category
+    <set>
+      <if test="parentId != null">
+        parent_id = #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null">
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="recordStatus != null">
+        record_status = #{recordStatus,jdbcType=CHAR},
+      </if>
+      <if test="expand1 != null">
+        expand1 = #{expand1,jdbcType=VARCHAR},
+      </if>
+      <if test="expand2 != null">
+        expand2 = #{expand2,jdbcType=VARCHAR},
+      </if>
+      <if test="expand3 != null">
+        expand3 = #{expand3,jdbcType=VARCHAR},
+      </if>
+        update_time = now(),
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.sk.mask.business.pojo.Category">
+    update tb_mask_category
+    set parent_id = #{parentId,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=INTEGER},
+      record_status = #{recordStatus,jdbcType=CHAR},
+      expand1 = #{expand1,jdbcType=VARCHAR},
+      expand2 = #{expand2,jdbcType=VARCHAR},
+      expand3 = #{expand3,jdbcType=VARCHAR},
+      update_time = now()
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+  <!--以下是自定义的-->
+
+  <!-- 表与实体映射 -->
+  <resultMap id="ResultMapCustom" type="cn.sk.mask.business.pojo.CategoryCustom" extends="BaseResultMap">
+    <result property="parentName" column="parentName"/>
+  </resultMap>
+
+  <!-- 查询条件的sql片段 -->
+
+  <sql id="base_query_condition">
+    <!--<if test="null != greaterThanPLevel">-->
+    <!--AND p_level >= #{greaterThanPLevel,jdbcType=INTEGER}-->
+    <!--</if>-->
+    <if test="null != categoryCustom">
+      <!-- ${}拼接字符串，有sql注入的维修，少用-->
+      <!--<if test="null != SysPermisCustom.userName and '' != SysPermisCustom.userName">-->
+      <!--AND user_name LIKE CONCAT('%',CONCAT(#{SysPermisCustom.userName},'%'))-->
+      <!--</if>-->
+      <if test="null != categoryCustom.parentId and '' != categoryCustom.parentId">
+        AND c1.parent_id = #{categoryCustom.parentId,jdbcType=INTEGER}
+      </if>
+      <!--<if test="null != sysPermisCustom.pLevel and '' != sysPermisCustom.pLevel">-->
+      <!--AND p_level = #{sysPermisCustom.pLevel,jdbcType=INTEGER}-->
+      <!--</if>-->
+      <if test="null != categoryCustom.name and '' != categoryCustom.name">
+        AND c1.name LIKE CONCAT('%',CONCAT(#{categoryCustom.name,jdbcType=VARCHAR},'%'))
+      </if>
+      <if test="null != categoryCustom.recordStatus and '' != categoryCustom.recordStatus">
+        AND c1.record_status = #{recordStatus,jdbcType=VARCHAR}
+      </if>
+
+    </if>
+  </sql>
+
+  <!--根据条件查询-->
+  <select id="selectListByQueryVo" parameterType="cn.sk.mask.sys.pojo.SysPermisQueryVo" resultMap="ResultMapCustom">
+    select
+    <include refid="Base_Column_List"/>,c2.name parentName
+    from tb_mask_category c1
+    left join tb_mask_category c2
+    on c1.parent_id = c2.id
+    <where>
+      <!-- 引用sql片段 的id,如果refid指定的id不在本mapper文件中,要前边加namespace -->
+      <include refid="base_query_condition"></include>
+      AND c1.record_status != '00'
+    </where>
+    <include refid="cn.sk.mask.base.mapper.IBaseMapper.base_order"/>
+  </select>
+
+
+
+  <!--根据主键软删除-->
+  <update id="deleteInIds">
+    update tb_mask_category
+    set record_status = #{recordStatus,jdbcType=VARCHAR}
+    <where>
+      id IN
+      <foreach collection="pks" open="(" close=")" separator="," item="pk">
+        #{pk}
+      </foreach>
+    </where>
+  </update>
+
+  <!--根据主键硬删除-->
+  <delete id="realDeleteInIds">
+    delete from tb_mask_category
+    <where>
+      id IN
+      <foreach collection="pks" open="(" close=")" separator="," item="pk">
+        #{pk}
+      </foreach>
+    </where>
+  </delete>
+  
+</mapper>

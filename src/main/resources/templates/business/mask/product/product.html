@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sk="http://www.sk.com/thymeleaf/sk">
+<head th:replace="common/common :: common_header(~{::title},~{},~{::link},~{})">
+    <!--title,metas,links,scripts-->
+    <title>产品管理</title>
+    <link th:href="@{/static/H-ui.admin/lib/webuploader/0.1.5/webuploader.css}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<article class="page-container">
+    <form class="form form-horizontal" id="productForm">
+        <!--<form th:action="${oprt}" method="post" class="form form-horizontal" id="sysUserForm">-->
+        <div>
+            <label id="retMsg" style="display:block;text-align: center;color: #FF0000"
+                   th:inline="text">[[${msg}]]</label>
+            <input type="hidden" id="id" name="id" th:value="${obj.id}" value=""/>
+        </div>
+
+        <div th:switch="${oprt}">
+            <!--添加开始-->
+            <div th:case="add">
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" required="true" text="产品名："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.name}" id="name" name="name"/>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" required="true" text="产品名（en）："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.nameEn}" id="nameEn" name="nameEn"/>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2"  text="副标题："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+<!--                        onKeyUp="$.Huitextarealength(this,10)"-->
+                        <textarea name="subtitle" cols="22" rows="6" class="textarea"
+
+                                  th:inline="text">
+                            [[${obj.subtitle}]]
+                        </textarea>
+<!--                        <p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>-->
+<!--                        <sk:input th:value="${obj.subtitle}" id="subtitle" name="subtitle"/>-->
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="副标题（en）："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <textarea name="subtitleEn" cols="22" rows="6" class="textarea"
+                        th:inline="text">
+                        [[${obj.subtitleEn}]]
+                        </textarea>
+                        <!--                        <p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>-->
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2"  text="主图："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+<!--                        <sk:input th:value="${obj.mainImage}" id="mainImage" name="mainImage"/>-->
+                        <input type="hidden" id="mainImage" name="mainImage" th:value="${obj.mainImage}"/>
+                        <div id="mainImgContainer" class="uploader-list-container">
+                            <div class="queueList">
+                                <div class="dndArea placeholder" style="min-height: 140px;padding-top: 70px;background-position-y:8px">
+                                    <div class="filePicker"></div>
+                                    <p>或将照片拖到这里，单次最多可选1张</p>
+                                </div>
+                            </div>
+                            <div class="statusBar" style="display:none;">
+                                <div class="progress"> <span class="text">0%</span> <span class="percentage"></span> </div>
+                                <div class="info"></div>
+                                <div class="btns">
+                                    <div  class="continueAdd"></div>
+<!--                                    <div class="uploadBtn">开始上传</div>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2"  text="子图："/>
+
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <input type="hidden" id="subImages" name="subImages" th:value="${obj.subImages}"/>
+                        <!--                        <sk:input th:value="${obj.subImages}" id="subImages" name="subImages"/>-->
+                        <div id="subImagContainer" class="uploader-list-container">
+                            <div class="queueList">
+                                <div class="dndArea placeholder"  style="min-height: 140px;padding-top: 70px;background-position-y:8px">
+                                    <div class="filePicker"></div>
+                                    <p>或将照片拖到这里，单次最多可选10张</p>
+                                </div>
+                            </div>
+                            <div class="statusBar" style="display:none;">
+                                <div class="progress"> <span class="text">0%</span> <span class="percentage"></span> </div>
+                                <div class="info"></div>
+                                <div class="btns">
+                                    <div class="continueAdd"></div>
+                                    <div class="uploadBtn">开始上传</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2"  text="产品参数："/>
+                    <div class="formControls col-xs-10 col-sm-10">
+<!--                        <sk:input th:value="${obj.productParam}" id="productParam" name="productParam"/>-->
+                        <input type="hidden" id="productParam" name="productParam" th:value="${obj.productParam}"/>
+                        <script id="productParamEditor" type="text/plain" style="width:100%;height:300px;"></script>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="产品参数（en）："/>
+                    <div class="formControls col-xs-10 col-sm-10">
+                        <sk:input th:value="${obj.productParamEn}" id="productParamEn" name="productParamEn"/>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2"  text="产品详情："/>
+                    <div class="formControls col-xs-10 col-sm-10">
+<!--                        <sk:input th:value="${obj.productDetail}" id="productDetail" name="productDetail"/>-->
+                        <input type="hidden" id="productDetail" name="productDetail" th:value="${obj.productDetail}"/>
+                        <script id="productDetailEditor" type="text/plain" style="width:100%;height:300px;"></script>
+
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="产品详情（en）："/>
+                    <div class="formControls col-xs-10 col-sm-10">
+                        <sk:input th:value="${obj.productDetailEn}" id="productDetailEn" name="productDetailEn"/>
+                    </div>
+                </div>
+            </div>
+            <!--添加结束-->
+
+            <!-- ********************** -->
+
+            <!--修改开始-->
+            <div th:case="update">
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" required="true" text="产品名："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.name}" id="name" name="name"/>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" required="true" text="产品名（en）："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.nameEn}" id="nameEn" name="nameEn"/>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2"  text="副标题："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <!--                        onKeyUp="$.Huitextarealength(this,10)"-->
+                        <textarea name="subtitle" cols="22" rows="6" class="textarea"
+
+                                  th:inline="text">
+                            [[${obj.subtitle}]]
+                        </textarea>
+                        <!--                        <p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>-->
+                        <!--                        <sk:input th:value="${obj.subtitle}" id="subtitle" name="subtitle"/>-->
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="副标题（en）："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <textarea name="subtitleEn" cols="22" rows="6" class="textarea"
+                                  th:inline="text">
+                        [[${obj.subtitleEn}]]
+                        </textarea>
+                        <!--                        <p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>-->
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2"  text="主图："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <!--                        <sk:input th:value="${obj.mainImage}" id="mainImage" name="mainImage"/>-->
+                        <input type="hidden" id="mainImage" name="mainImage" th:value="${obj.mainImage}"/>
+                        <div id="mainImgContainer" class="uploader-list-container">
+                            <div class="queueList">
+                                <div class="dndArea placeholder" style="min-height: 140px;padding-top: 70px;background-position-y:8px">
+                                    <div class="filePicker"></div>
+                                    <p>或将照片拖到这里，单次最多可选1张</p>
+                                </div>
+                            </div>
+                            <div class="statusBar" style="display:none;">
+                                <div class="progress"> <span class="text">0%</span> <span class="percentage"></span> </div>
+                                <div class="info"></div>
+                                <div class="btns">
+                                    <div  class="continueAdd"></div>
+                                    <!--                                    <div class="uploadBtn">开始上传</div>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2"  text="子图："/>
+
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <input type="hidden" id="subImages" name="subImages" th:value="${obj.subImages}"/>
+                        <!--                        <sk:input th:value="${obj.subImages}" id="subImages" name="subImages"/>-->
+                        <div id="subImagContainer" class="uploader-list-container">
+                            <div class="queueList">
+                                <div class="dndArea placeholder"  style="min-height: 140px;padding-top: 70px;background-position-y:8px">
+                                    <div class="filePicker"></div>
+                                    <p>或将照片拖到这里，单次最多可选10张</p>
+                                </div>
+                            </div>
+                            <div class="statusBar" style="display:none;">
+                                <div class="progress"> <span class="text">0%</span> <span class="percentage"></span> </div>
+                                <div class="info"></div>
+                                <div class="btns">
+                                    <div class="continueAdd"></div>
+<!--                                    <div class="uploadBtn">开始上传</div>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2"  text="产品参数："/>
+                    <div class="formControls col-xs-10 col-sm-10">
+                        <!--                        <sk:input th:value="${obj.productParam}" id="productParam" name="productParam"/>-->
+                        <input type="hidden" id="productParam" name="productParam" th:value="${obj.productParam}"/>
+                        <script id="productParamEditor" type="text/plain" style="width:100%;height:300px;"></script>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="产品参数（en）："/>
+                    <div class="formControls col-xs-10 col-sm-10">
+                        <sk:input th:value="${obj.productParamEn}" id="productParamEn" name="productParamEn"/>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2"  text="产品详情："/>
+                    <div class="formControls col-xs-10 col-sm-10">
+                        <!--                        <sk:input th:value="${obj.productDetail}" id="productDetail" name="productDetail"/>-->
+                        <input type="hidden" id="productDetail" name="productDetail" th:value="${obj.productDetail}"/>
+                        <script id="productDetailEditor" type="text/plain" style="width:100%;height:300px;"></script>
+
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="产品详情（en）："/>
+                    <div class="formControls col-xs-10 col-sm-10">
+                        <sk:input th:value="${obj.productDetailEn}" id="productDetailEn" name="productDetailEn"/>
+                    </div>
+                </div>
+            </div>
+            <!--修改结束-->
+
+            <!-- ********************** -->
+
+            <!--详情开始-->
+            <div th:case="queryDetail">
+                <!--<div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="报修编号："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.rpNo}" id="rpNo" name="rpNo" th:disabled="true"/>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="类型："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.rpTypeStr}" id="rpType" name="rpType" th:disabled="true"/>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="位置："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.rpPosiStoreyStr}" id="rpPosiStoreyStr" name="rpPosiStoreyStr" th:disabled="true"/>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="联系人："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.linkPerson}" name="linkPerson" th:disabled="true"/>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="联系人电话："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.linkPhone}" name="linkPhone" th:disabled="true"/>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="报修人："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.rpPerson}" name="rpPerson" th:disabled="true"/>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="报修人部门："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.rpDepart}"  name="rpDepart" th:disabled="true"/>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="报修人电话："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.rpPhone}" name="rpPhone" th:disabled="true"/>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="维修人："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.wxPerson}" name="wxPerson" th:disabled="true"/>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="处理时间："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        &lt;!&ndash;<sk:input th:value="${obj.handleTime}" name="handleTime" th:disabled="true"/>&ndash;&gt;
+                        <sk:input th:value="${#dates.format(obj.handleTime, 'YYYY-MM-DD HH:mm:ss')}" name="handleTime" th:disabled="true"/>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="故障图片："/>
+                    <div class="formControls col-xs-10 col-sm-10">
+                        <span  th:each="item: ${obj.breakdownPics}">
+                           <img width="100" height="100" class="picture-thumb" th:src="${item}">
+                        </span>
+                    </div>
+
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="维修图片："/>
+                    <div class="formControls col-xs-10 col-sm-10">
+                        <span  th:each="item: ${obj.wxPics}">
+                           <img width="100" height="100" class="picture-thumb" th:src="${item}">
+                        </span>
+                    </div>
+
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="描述："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <textarea name="breakdownDesc" cols="22" rows="4" class="textarea"
+                                  onKeyUp="$.Huitextarealength(this,100)"
+                                  th:inline="text" th:disabled="true">
+                            [[${obj.breakdownDesc}]]
+                        </textarea>
+                        <p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="意见："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <textarea name="rpIdea" cols="22" rows="4" class="textarea"
+                                  onKeyUp="$.Huitextarealength(this,100)"
+                                  th:inline="text" th:disabled="true">
+                            [[${obj.rpIdea}]]
+                        </textarea>
+                        <p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>
+                    </div>
+                </div>-->
+            </div>
+            <!--详情介绍-->
+
+            <!-- ********************** -->
+
+        </div>
+
+
+        <div th:if="${oprt != 'queryDetail'}" class="row cl">
+            <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+                <sk:button class="btn-success" type="reset" text="&nbsp;&nbsp;重置&nbsp;&nbsp;"/>
+                <sk:button class="btn-primary" type="submit" text="&nbsp;&nbsp;提交&nbsp;&nbsp;"/>
+            </div>
+        </div>
+    </form>
+</article>
+
+<!--_footer 作为公共模版分离出去-->
+<div th:replace="common/common :: common_footer">
+</div>
+<!--/_footer 作为公共模版分离出去-->
+
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/My97DatePicker/4.8/WdatePicker.js}"></script>
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/jquery.validation/1.14.0/jquery.validate.js}"></script>
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/jquery.validation/1.14.0/validate-methods.js}"></script>
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/jquery.validation/1.14.0/messages_zh.js}"></script>
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/zTree/v3/js/jquery.ztree.all-3.5.min.js}"></script>
+<script type="text/javascript"  th:src="@{/static/H-ui.admin/lib/webuploader/0.1.5/webuploader.min.js}"></script>
+<script type="text/javascript"  th:src="@{/static/js/lib/skWebUploader.js}"></script>
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/ueditor/1.4.3/ueditor.config.js}"></script>
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/ueditor/1.4.3/ueditor.all.js}"> </script>
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js}"></script>
+
+<script type="text/javascript" th:inline="javascript">
+    var oprt = [[${oprt}]];
+    var imgHttpPrefix = [[${imgHttpPrefix}]];
+</script>
+<script type="text/javascript">
+    $(function () {
+        $('.skin-minimal input').iCheck({
+            checkboxClass: 'icheckbox-blue',
+            radioClass: 'iradio-blue',
+            increaseArea: '20%'
+        });
+        $("#productForm").validate({
+            rules: {
+                name: {
+                    required: true
+                },
+                nameEn: {
+                    required: true
+                },
+
+            },
+            onkeyup: false,
+            focusCleanup: true,
+            success: "valid",
+            submitHandler: function (form) {
+                /*$(form).ajaxSubmit();
+                 parent.location.reload();
+                 var index = parent.layer.getFrameIndex(window.name);
+                 //parent.$('.btn-refresh').click();
+                 parent.layer.close(index);*/
+                return
+                //加载层-默认风格
+                layer.load();
+                //先提交图片
+                if (mainImgUploader.isUpload()){
+                    mainImgUploader.uploadClick();
+                    mainImgUploader.onUploadFinished = function(){
+                        if (subImgUploader.isUpload()){
+                            subImgUploader.uploadClick();
+                            subImgUploader.onUploadFinished = function(){
+                                submitForm(form);
+                            };
+                        }else{
+                            submitForm(form);
+                        }
+                    };
+
+                }else if (subImgUploader.isUpload()){
+                    subImgUploader.uploadClick();
+                    subImgUploader.onUploadFinished = function(){
+                        submitForm(form);
+                    };
+                }else{
+                    submitForm(form);
+                }
+
+
+
+
+
+
+//                return false; // 阻止表单自动提交事件
+            }
+        });
+
+        var submitForm = function (form) {
+            //获取html内容
+            $('#productParam').val(productParamEditor.getContent());
+            $('#productDetail').val(productDetailEditor.getContent());
+            var url = oprt;
+            var param = $(form).serialize();
+            sk.ajaxRequest(url, param, function (r) {
+                if (r.code == '0') {
+
+                    sk.successMsg(r.msg);
+                    // if (oprt != 'add') {
+                        setTimeout(function () {
+                            // parent.location.reload();
+//                                var index = parent.layer.getFrameIndex(window.name);
+//                                parent.layer.close(index);
+                            layer_close();
+                        }, 800);
+                    // }
+                } else {
+                    sk.failMsg(r.msg);
+                }
+                layer.closeAll('loading');
+            });
+        }
+
+        var mainImgUploader = new SkWebUploader(
+            {
+                formData: {
+                    pathType: '1'
+                },
+                dnd: '#mainImgContainer .dndArea',
+                paste: '#uploader',
+                chunked: false,
+                server: basePath+'upload/file',
+                // 禁掉全局的拖拽功能。这样不会出现图片拖进页面的时候，把图片打开。
+                disableGlobalDnd: true,
+                fileNumLimit:1,
+                skExpand:{
+                    containerId:'#mainImgContainer',
+                    fieldId:'#mainImage',
+                }
+            }
+        );
+        // var getFileBlob = function (url, cb) {
+        //     var xhr = new XMLHttpRequest();
+        //     xhr.open("GET", url);
+        //     xhr.responseType = "blob";
+        //     xhr.addEventListener('load', function() {
+        //         cb(xhr.response);
+        //     });
+        //     xhr.send();
+        // };
+        //
+        // var blobToFile = function (blob, name) {
+        //     blob.lastModifiedDate = new Date();
+        //     blob.name = name;
+        //     return blob;
+        // };
+        //
+        // var getFileObject = function(filePathOrUrl, cb) {
+        //     getFileBlob(filePathOrUrl, function (blob) {
+        //         cb(blobToFile(blob, 'test.jpg'));
+        //     });
+        // };
+        //
+        // //需要编辑的图片列表
+        // // var picList = ['图片url','图片url','图片url','图片url' ]
+        // var picList = $('#mainImage').val().split(';')
+        // $.each(picList, function(index,item){
+        //     getFileObject(imgHttpPrefix+item, function (fileObject) {
+        //         var wuFile = new WebUploader.Lib.File(WebUploader.guid('rt_'),fileObject);
+        //         var file = new WebUploader.File(wuFile);
+        //         mainImgUploader.uploader.addFiles(file)
+        //     })
+        // });
+        var subImgUploader;
+        //解决第一无效的问题
+        setTimeout(function(){
+            subImgUploader = new SkWebUploader(
+                {
+                    formData: {
+                        pathType: '1'
+                    },
+                    dnd: '#subImagContainer .dndArea',
+                    paste: '#uploader',
+                    chunked: false,
+                    server: basePath+'upload/file',
+                    // 禁掉全局的拖拽功能。这样不会出现图片拖进页面的时候，把图片打开。
+                    disableGlobalDnd: true,
+                    skExpand:{
+                        containerId:'#subImagContainer',
+                        fieldId:'#subImages',
+                    }
+                }
+            );
+        },100);
+
+        //编辑器
+        var productParamEditor = UE.getEditor('productParamEditor');
+        //默认显示内容必须在实例化编辑器之后才能显示
+        productParamEditor.ready(function() {
+            //默认显示内容
+            productParamEditor.setContent($('#productParam').val());
+        });
+        var productDetailEditor = UE.getEditor('productDetailEditor');
+        //编辑器
+        productDetailEditor.ready(function() {
+            //默认显示内容
+            productDetailEditor.setContent($('#productDetail').val());
+        });
+
+
+        // js事件委托
+        // $('#subImagContainer .queueList').get(0).onmousedown = function (event) {
+        //     event = event || window.event;
+        //     // var target = event.target.parentNode.childNodes;
+        //     var childNodes = event.target.parentNode.parentNode.parentNode.childNodes;
+        //     for (var i = 0, len = childNodes.length; i < len; i++) {
+        //         var node = childNodes[i];
+        //         // 获取目标元素
+        //         if (node.nodeName == 'LI') {
+        //             node.addEventListener("dragstart", domdrugstart.bind(node), false);
+        //             node.addEventListener('dragover', domdrugover, false);
+        //             node.addEventListener('drop', domdrop, false);
+        //         }
+        //     }
+        // }
+        // $('#subImagContainer .queueList').get(0).onmousedown = function (event) {
+        //     event = event || window.event;
+        //     // var target = event.target.parentNode.childNodes;
+        //     var childNodes = event.target.parentNode.parentNode.parentNode.childNodes;
+        //     for (var i = 0, len = childNodes.length; i < len; i++) {
+        //         var node = childNodes[i];
+        //         // 获取目标元素
+        //         if (node.nodeName == 'LI') {
+        //             node.addEventListener("dragstart", domdrugstart.bind(node), false);
+        //             node.addEventListener('dragover', domdrugover, false);
+        //             node.addEventListener('drop', domdrop, false);
+        //         }
+        //     }
+        // }
+    });
+    /*排序*/
+    // var dragEl = null;
+    //
+    // function domdrugstart(e) {
+    //     // e.target.style.opacity = '0.5';
+    //     dragEl = this;
+    //     console.log(this)
+    //     e.dataTransfer.effectAllowed = "move";
+    //     e.dataTransfer.setData("text/html", this.innerHTML);
+    // }
+    //
+    // function domdrugover(e) {
+    //     if (e.preventDefault) {
+    //         e.preventDefault();
+    //     }
+    //     e.dataTransfer.dropEffect = 'move';
+    //     return false;
+    // }
+    //
+    // function domdrop(e) {
+    //     if (e.stopPropagation) {
+    //         e.stopPropagation();
+    //     }
+    //     console.log(this)
+    //     // 位置互换
+    //     if (dragEl != this) {
+    //         dragEl.innerHTML = this.innerHTML;
+    //         this.innerHTML = e.dataTransfer.getData('text/html');
+    //     }
+    //     return false;
+    // }
+
+    (function( $ ){
+        // 当domReady的时候开始初始化
+        $(function() {
+
+        });
+    })( jQuery );
+</script>
+
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

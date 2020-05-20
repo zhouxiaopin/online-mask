@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.sk.mask.sys.mapper.SysPermisMapper">
+    <resultMap id="BaseResultMap" type="cn.sk.mask.sys.pojo.SysPermis">
+        <constructor>
+            <idArg column="p_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="p_flag" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="p_name" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="p_url" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="parent_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="p_type" javaType="java.lang.String" jdbcType="CHAR"/>
+            <arg column="p_level" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="p_sort" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="descri" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="opt_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="left_icon" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="expand_1" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="expand_2" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="expand_3" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="record_status" javaType="java.lang.String" jdbcType="CHAR"/>
+            <arg column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+            <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
+    sp.p_id, sp.p_flag, sp.p_name, sp.p_url, sp.parent_id, sp.p_type, sp.p_level, sp.p_sort, sp.descri, sp.opt_id, sp.left_icon,
+    sp.expand_1, sp.expand_2, sp.expand_3, sp.record_status, sp.update_time, sp.create_time
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapCustom">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_sys_permis sp
+        where p_id = #{pId,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_sys_permis
+    where p_id = #{pId,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="cn.sk.mask.sys.pojo.SysPermis">
+    insert into tb_sys_permis (p_id, p_flag, p_name, p_url,
+      parent_id, p_type, p_level, 
+      p_sort, descri, opt_id, 
+      left_icon, expand_1, expand_2, 
+      expand_3, record_status, update_time, 
+      create_time)
+    values (#{pId,jdbcType=INTEGER}, #{pFlag,jdbcType=VARCHAR}, #{pName,jdbcType=VARCHAR},#{pUrl,jdbcType=VARCHAR},
+      #{parentId,jdbcType=INTEGER}, #{pType,jdbcType=CHAR}, #{pLevel,jdbcType=INTEGER},
+      #{pSort,jdbcType=INTEGER}, #{descri,jdbcType=VARCHAR}, #{optId,jdbcType=INTEGER},
+      #{leftIcon,jdbcType=VARCHAR}, #{expand1,jdbcType=VARCHAR}, #{expand2,jdbcType=VARCHAR}, 
+      #{expand3,jdbcType=VARCHAR}, #{recordStatus,jdbcType=CHAR}, now(),
+      now())
+  </insert>
+    <insert id="insertSelective" parameterType="cn.sk.mask.sys.pojo.SysPermis">
+        insert into tb_sys_permis
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pId != null">
+                p_id,
+            </if>
+            <if test="pFlag != null">
+                p_flag,
+            </if>
+            <if test="pName != null">
+                p_name,
+            </if>
+            <if test="pUrl != null">
+                p_url,
+            </if>
+            <if test="parentId != null">
+                parent_id,
+            </if>
+            <if test="pType != null">
+                p_type,
+            </if>
+            <if test="pLevel != null">
+                p_level,
+            </if>
+            <if test="pSort != null">
+                p_sort,
+            </if>
+            <if test="descri != null">
+                descri,
+            </if>
+            <if test="optId != null">
+                opt_id,
+            </if>
+            <if test="leftIcon != null">
+                left_icon,
+            </if>
+            <if test="expand1 != null">
+                expand_1,
+            </if>
+            <if test="expand2 != null">
+                expand_2,
+            </if>
+            <if test="expand3 != null">
+                expand_3,
+            </if>
+            <if test="recordStatus != null">
+                record_status,
+            </if>
+            update_time,
+            create_time,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pId != null">
+                #{pId,jdbcType=INTEGER},
+            </if>
+            <if test="pFlag != null">
+                #{pFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="pName != null">
+                #{pName,jdbcType=VARCHAR},
+            </if>
+            <if test="pUrl != null">
+                #{pUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="parentId != null">
+                #{parentId,jdbcType=INTEGER},
+            </if>
+            <if test="pType != null">
+                #{pType,jdbcType=CHAR},
+            </if>
+            <if test="pLevel != null">
+                #{pLevel,jdbcType=INTEGER},
+            </if>
+            <if test="pSort != null">
+                #{pSort,jdbcType=INTEGER},
+            </if>
+            <if test="descri != null">
+                #{descri,jdbcType=VARCHAR},
+            </if>
+            <if test="optId != null">
+                #{optId,jdbcType=INTEGER},
+            </if>
+            <if test="leftIcon != null">
+                #{leftIcon,jdbcType=VARCHAR},
+            </if>
+            <if test="expand1 != null">
+                #{expand1,jdbcType=VARCHAR},
+            </if>
+            <if test="expand2 != null">
+                #{expand2,jdbcType=VARCHAR},
+            </if>
+            <if test="expand3 != null">
+                #{expand3,jdbcType=VARCHAR},
+            </if>
+            <if test="recordStatus != null">
+                #{recordStatus,jdbcType=CHAR},
+            </if>
+            now(),
+            now(),
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="cn.sk.mask.sys.pojo.SysPermis">
+        update tb_sys_permis
+        <set>
+            <if test="pFlag != null">
+                p_flag = #{pFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="pName != null">
+                p_name = #{pName,jdbcType=VARCHAR},
+            </if>
+            <if test="pUrl != null">
+                p_url = #{pUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="parentId != null">
+                parent_id = #{parentId,jdbcType=INTEGER},
+            </if>
+            <if test="pType != null">
+                p_type = #{pType,jdbcType=CHAR},
+            </if>
+            <if test="pLevel != null">
+                p_level = #{pLevel,jdbcType=INTEGER},
+            </if>
+            <if test="pSort != null">
+                p_sort = #{pSort,jdbcType=INTEGER},
+            </if>
+            <if test="descri != null">
+                descri = #{descri,jdbcType=VARCHAR},
+            </if>
+            <if test="optId != null">
+                opt_id = #{optId,jdbcType=INTEGER},
+            </if>
+            <if test="leftIcon != null">
+                left_icon = #{leftIcon,jdbcType=VARCHAR},
+            </if>
+            <if test="expand1 != null">
+                expand_1 = #{expand1,jdbcType=VARCHAR},
+            </if>
+            <if test="expand2 != null">
+                expand_2 = #{expand2,jdbcType=VARCHAR},
+            </if>
+            <if test="expand3 != null">
+                expand_3 = #{expand3,jdbcType=VARCHAR},
+            </if>
+            <if test="recordStatus != null">
+                record_status = #{recordStatus,jdbcType=CHAR},
+            </if>
+            update_time = now(),
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where p_id = #{pId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="cn.sk.mask.sys.pojo.SysPermis">
+    update tb_sys_permis
+    set p_flag = #{pFlag,jdbcType=VARCHAR},
+      p_name = #{pName,jdbcType=VARCHAR},
+      p_url = #{pUrl,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=INTEGER},
+      p_type = #{pType,jdbcType=CHAR},
+      p_level = #{pLevel,jdbcType=INTEGER},
+      p_sort = #{pSort,jdbcType=INTEGER},
+      descri = #{descri,jdbcType=VARCHAR},
+      opt_id = #{optId,jdbcType=INTEGER},
+      left_icon = #{leftIcon,jdbcType=VARCHAR},
+      expand_1 = #{expand1,jdbcType=VARCHAR},
+      expand_2 = #{expand2,jdbcType=VARCHAR},
+      expand_3 = #{expand3,jdbcType=VARCHAR},
+      record_status = #{recordStatus,jdbcType=CHAR},
+      update_time = now(),
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where p_id = #{pId,jdbcType=INTEGER}
+  </update>
+
+
+    <!--以下是自定义的-->
+
+    <!-- 表与实体映射 -->
+    <resultMap id="ResultMapCustom" type="cn.sk.mask.sys.pojo.SysPermisCustom" extends="BaseResultMap">
+        <result property="userName" column="user_name"/>
+        <result property="parentName" column="parentName"/>
+    </resultMap>
+
+    <!-- 查询条件的sql片段 -->
+
+    <sql id="base_query_condition">
+        <!--<if test="null != greaterThanPLevel">-->
+        <!--AND p_level >= #{greaterThanPLevel,jdbcType=INTEGER}-->
+        <!--</if>-->
+        <if test="null != sysPermisCustom">
+            <!-- ${}拼接字符串，有sql注入的维修，少用-->
+            <!--<if test="null != SysPermisCustom.userName and '' != SysPermisCustom.userName">-->
+            <!--AND user_name LIKE CONCAT('%',CONCAT(#{SysPermisCustom.userName},'%'))-->
+            <!--</if>-->
+            <if test="null != sysPermisCustom.parentId and '' != sysPermisCustom.parentId">
+                AND sp.parent_id = #{sysPermisCustom.parentId,jdbcType=INTEGER}
+            </if>
+            <!--<if test="null != sysPermisCustom.pLevel and '' != sysPermisCustom.pLevel">-->
+            <!--AND p_level = #{sysPermisCustom.pLevel,jdbcType=INTEGER}-->
+            <!--</if>-->
+            <if test="null != sysPermisCustom.pName and '' != sysPermisCustom.pName">
+                AND sp.p_name LIKE CONCAT('%',CONCAT(#{sysPermisCustom.pName,jdbcType=VARCHAR},'%'))
+            </if>
+            <if test="null != sysPermisCustom.recordStatus and '' != sysPermisCustom.recordStatus">
+                AND sp.record_status = #{recordStatus,jdbcType=VARCHAR}
+            </if>
+
+        </if>
+    </sql>
+
+    <!--根据条件查询-->
+    <select id="selectListByQueryVo" parameterType="cn.sk.mask.sys.pojo.SysPermisQueryVo" resultMap="ResultMapCustom">
+        select
+        <include refid="Base_Column_List"/>,su.user_name,sp2.p_name parentName
+        from tb_sys_permis sp left join tb_sys_user su
+        on sp.opt_id = su.u_id
+        left join tb_sys_permis sp2
+        on sp.parent_id = sp2.p_id
+        <where>
+            <!-- 引用sql片段 的id,如果refid指定的id不在本mapper文件中,要前边加namespace -->
+            <include refid="base_query_condition"></include>
+            AND sp.record_status != '00'
+        </where>
+        <include refid="cn.sk.mask.base.mapper.IBaseMapper.base_order"/>
+    </select>
+
+    <!--根据角色id查找权限-->
+    <select id="selectListByRoleId" parameterType="map" resultType="map">
+        select sp.p_id pId, sp.p_flag pFlag, sp.p_name pName, sp.p_url pUrl, sp.parent_id parentId, sp.p_type
+        pType,sp.p_level pLevel, sp.p_sort pSort, sp.left_icon leftIcon from tb_sys_role_permis rp
+        LEFT JOIN tb_sys_permis sp
+        on rp.permis_id = sp.p_id
+        <where>
+            and role_id IN
+            <foreach collection="params.roleIds" open="(" close=")" separator="," item="roleId">
+                #{roleId,jdbcType=INTEGER}
+            </foreach>
+            and sp.record_status = #{params.recordStatus,jdbcType=CHAR}
+            <if test="null != params.pType and '' != params.pType">
+                and sp.p_type = #{params.pType,jdbcType=CHAR}
+            </if>
+        </where>
+        <if test="null != params.orderBy and '' != params.orderBy">
+            order by ${params.orderBy}
+        </if>
+    </select>
+
+
+    <!--根据主键软删除-->
+    <update id="deleteInIds">
+        update tb_sys_permis
+        set record_status = #{recordStatus,jdbcType=VARCHAR}
+        <where>
+            p_id IN
+            <foreach collection="pks" open="(" close=")" separator="," item="pk">
+                #{pk}
+            </foreach>
+        </where>
+    </update>
+
+    <!--根据主键硬删除-->
+    <delete id="realDeleteInIds">
+        delete from tb_sys_permis
+        <where>
+            p_id IN
+            <foreach collection="pks" open="(" close=")" separator="," item="pk">
+                #{pk}
+            </foreach>
+        </where>
+    </delete>
+</mapper>

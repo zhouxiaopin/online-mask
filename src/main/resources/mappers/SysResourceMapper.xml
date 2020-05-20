@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.sk.mask.sys.mapper.SysResourceMapper">
+    <resultMap id="BaseResultMap" type="cn.sk.mask.sys.pojo.SysResource">
+        <constructor>
+            <idArg column="r_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="r_name" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="r_url" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="parent_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="r_type" javaType="java.lang.String" jdbcType="CHAR"/>
+            <arg column="r_level" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="r_sort" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="descri" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="opt_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="left_icon" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="expand_1" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="expand_2" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="expand_3" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="record_status" javaType="java.lang.String" jdbcType="CHAR"/>
+            <arg column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+            <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
+    sr.r_id, sr.r_name, sr.r_url, sr.parent_id, sr.r_type, sr.r_level, sr.r_sort, sr.descri, sr.opt_id, sr.left_icon,
+    sr.expand_1, sr.expand_2, sr.expand_3, sr.record_status, sr.update_time, sr.create_time
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapCustom">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_sys_resource sr
+        where r_id = #{rId,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_sys_resource
+    where r_id = #{rId,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="cn.sk.mask.sys.pojo.SysResource">
+    insert into tb_sys_resource (r_id, r_name, r_url, 
+      parent_id, r_type, r_level, 
+      r_sort, descri, opt_id, 
+      left_icon, expand_1, expand_2, 
+      expand_3, record_status, update_time, 
+      create_time)
+    values (#{rId,jdbcType=INTEGER}, #{rName,jdbcType=VARCHAR}, #{rUrl,jdbcType=VARCHAR}, 
+      #{parentId,jdbcType=INTEGER}, #{rType,jdbcType=CHAR}, #{rLevel,jdbcType=INTEGER}, 
+      #{rSort,jdbcType=INTEGER}, #{descri,jdbcType=VARCHAR}, #{optId,jdbcType=INTEGER}, 
+      #{leftIcon,jdbcType=VARCHAR}, #{expand1,jdbcType=VARCHAR}, #{expand2,jdbcType=VARCHAR}, 
+      #{expand3,jdbcType=VARCHAR}, #{recordStatus,jdbcType=CHAR}, now(),
+      now())
+  </insert>
+    <insert id="insertSelective" parameterType="cn.sk.mask.sys.pojo.SysResource">
+        insert into tb_sys_resource
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="rId != null">
+                r_id,
+            </if>
+            <if test="rName != null">
+                r_name,
+            </if>
+            <if test="rUrl != null">
+                r_url,
+            </if>
+            <if test="parentId != null">
+                parent_id,
+            </if>
+            <if test="rType != null">
+                r_type,
+            </if>
+            <if test="rLevel != null">
+                r_level,
+            </if>
+            <if test="rSort != null">
+                r_sort,
+            </if>
+            <if test="descri != null">
+                descri,
+            </if>
+            <if test="optId != null">
+                opt_id,
+            </if>
+            <if test="leftIcon != null">
+                left_icon,
+            </if>
+            <if test="expand1 != null">
+                expand_1,
+            </if>
+            <if test="expand2 != null">
+                expand_2,
+            </if>
+            <if test="expand3 != null">
+                expand_3,
+            </if>
+            <if test="recordStatus != null">
+                record_status,
+            </if>
+            update_time,
+            create_time,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="rId != null">
+                #{rId,jdbcType=INTEGER},
+            </if>
+            <if test="rName != null">
+                #{rName,jdbcType=VARCHAR},
+            </if>
+            <if test="rUrl != null">
+                #{rUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="parentId != null">
+                #{parentId,jdbcType=INTEGER},
+            </if>
+            <if test="rType != null">
+                #{rType,jdbcType=CHAR},
+            </if>
+            <if test="rLevel != null">
+                #{rLevel,jdbcType=INTEGER},
+            </if>
+            <if test="rSort != null">
+                #{rSort,jdbcType=INTEGER},
+            </if>
+            <if test="descri != null">
+                #{descri,jdbcType=VARCHAR},
+            </if>
+            <if test="optId != null">
+                #{optId,jdbcType=INTEGER},
+            </if>
+            <if test="leftIcon != null">
+                #{leftIcon,jdbcType=VARCHAR},
+            </if>
+            <if test="expand1 != null">
+                #{expand1,jdbcType=VARCHAR},
+            </if>
+            <if test="expand2 != null">
+                #{expand2,jdbcType=VARCHAR},
+            </if>
+            <if test="expand3 != null">
+                #{expand3,jdbcType=VARCHAR},
+            </if>
+            <if test="recordStatus != null">
+                #{recordStatus,jdbcType=CHAR},
+            </if>
+            now(),
+            now(),
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="cn.sk.mask.sys.pojo.SysResource">
+        update tb_sys_resource
+        <set>
+            <if test="rName != null">
+                r_name = #{rName,jdbcType=VARCHAR},
+            </if>
+            <if test="rUrl != null">
+                r_url = #{rUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="parentId != null">
+                parent_id = #{parentId,jdbcType=INTEGER},
+            </if>
+            <if test="rType != null">
+                r_type = #{rType,jdbcType=CHAR},
+            </if>
+            <if test="rLevel != null">
+                r_level = #{rLevel,jdbcType=INTEGER},
+            </if>
+            <if test="rSort != null">
+                r_sort = #{rSort,jdbcType=INTEGER},
+            </if>
+            <if test="descri != null">
+                descri = #{descri,jdbcType=VARCHAR},
+            </if>
+            <if test="optId != null">
+                opt_id = #{optId,jdbcType=INTEGER},
+            </if>
+            <if test="leftIcon != null">
+                left_icon = #{leftIcon,jdbcType=VARCHAR},
+            </if>
+            <if test="expand1 != null">
+                expand_1 = #{expand1,jdbcType=VARCHAR},
+            </if>
+            <if test="expand2 != null">
+                expand_2 = #{expand2,jdbcType=VARCHAR},
+            </if>
+            <if test="expand3 != null">
+                expand_3 = #{expand3,jdbcType=VARCHAR},
+            </if>
+            <if test="recordStatus != null">
+                record_status = #{recordStatus,jdbcType=CHAR},
+            </if>
+            update_time = now(),
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where r_id = #{rId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="cn.sk.mask.sys.pojo.SysResource">
+    update tb_sys_resource
+    set r_name = #{rName,jdbcType=VARCHAR},
+      r_url = #{rUrl,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=INTEGER},
+      r_type = #{rType,jdbcType=CHAR},
+      r_level = #{rLevel,jdbcType=INTEGER},
+      r_sort = #{rSort,jdbcType=INTEGER},
+      descri = #{descri,jdbcType=VARCHAR},
+      opt_id = #{optId,jdbcType=INTEGER},
+      left_icon = #{leftIcon,jdbcType=VARCHAR},
+      expand_1 = #{expand1,jdbcType=VARCHAR},
+      expand_2 = #{expand2,jdbcType=VARCHAR},
+      expand_3 = #{expand3,jdbcType=VARCHAR},
+      record_status = #{recordStatus,jdbcType=CHAR},
+      update_time = now(),
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where r_id = #{rId,jdbcType=INTEGER}
+  </update>
+
+
+    <!--以下是自定义的-->
+
+    <!-- 表与实体映射 -->
+    <resultMap id="ResultMapCustom" type="cn.sk.mask.sys.pojo.SysResourceCustom" extends="BaseResultMap">
+        <result property="userName" column="user_name"/>
+    </resultMap>
+
+    <!-- 查询条件的sql片段 -->
+
+    <sql id="base_query_condition">
+        <!--<if test="null != greaterThanPLevel">-->
+        <!--AND p_level >= #{greaterThanPLevel,jdbcType=INTEGER}-->
+        <!--</if>-->
+        <if test="null != sysResourceCustom">
+            <!-- ${}拼接字符串，有sql注入的维修，少用-->
+            <!--<if test="null != SysPermisCustom.userName and '' != SysPermisCustom.userName">-->
+            <!--AND user_name LIKE CONCAT('%',CONCAT(#{SysPermisCustom.userName},'%'))-->
+            <!--</if>-->
+            <if test="null != sysResourceCustom.parentId and '' != sysResourceCustom.parentId">
+                AND sr.parent_id = #{sysResourceCustom.parentId,jdbcType=INTEGER}
+            </if>
+            <!--<if test="null != sysPermisCustom.pLevel and '' != sysPermisCustom.pLevel">-->
+            <!--AND p_level = #{sysPermisCustom.pLevel,jdbcType=INTEGER}-->
+            <!--</if>-->
+            <if test="null != sysResourceCustom.rName and '' != sysResourceCustom.rName">
+                AND sr.r_name LIKE CONCAT('%',CONCAT(#{sysResourceCustom.rName,jdbcType=VARCHAR},'%'))
+            </if>
+            <if test="null != sysResourceCustom.recordStatus and '' != sysResourceCustom.recordStatus">
+                AND sr.record_status = #{recordStatus,jdbcType=VARCHAR}
+            </if>
+
+        </if>
+    </sql>
+
+    <!--根据条件查询-->
+    <select id="selectListByQueryVo" parameterType="cn.sk.mask.sys.pojo.SysResourceQueryVo" resultMap="ResultMapCustom">
+        select
+        <include refid="Base_Column_List"/>,su.user_name,sr2.r_name parentName
+        from tb_sys_resource sr left join tb_sys_user su
+        on sr.opt_id = su.u_id
+        left join tb_sys_resource sr2
+        on sr.parent_id = sr2.r_id
+        <where>
+            <!-- 引用sql片段 的id,如果refid指定的id不在本mapper文件中,要前边加namespace -->
+            <include refid="base_query_condition"></include>
+            AND sr.record_status != '00'
+        </where>
+        <include refid="cn.sk.mask.base.mapper.IBaseMapper.base_order"/>
+    </select>
+
+    <!--根据角色id查找资源-->
+    <select id="selectListByRoleId" parameterType="map" resultType="map">
+        select sr.r_id rId, sr.r_name rName, sr.r_url rUrl, sr.parent_id parentId, sr.r_type
+        rType,sr.r_level rLevel, sr.r_sort rSort, sr.left_icon leftIcon from tb_sys_resource sr
+        LEFT JOIN tb_sys_role_resource rr
+        on rr.res_id = sr.r_id
+        <where>
+            and role_id IN
+            <foreach collection="params.roleIds" open="(" close=")" separator="," item="roleId">
+                #{roleId,jdbcType=INTEGER}
+            </foreach>
+            and sr.record_status = #{params.recordStatus,jdbcType=CHAR}
+            <if test="null != params.rType and '' != params.rType">
+                and sr.r_type = #{params.rType,jdbcType=CHAR}
+            </if>
+        </where>
+        <if test="null != params.orderBy and '' != params.orderBy">
+            order by ${params.orderBy}
+        </if>
+    </select>
+
+
+    <!--根据主键软删除-->
+    <update id="deleteInIds">
+        update tb_sys_resource
+        set record_status = #{recordStatus,jdbcType=VARCHAR}
+        <where>
+            r_id IN
+            <foreach collection="pks" open="(" close=")" separator="," item="pk">
+                #{pk}
+            </foreach>
+        </where>
+    </update>
+
+    <!--根据主键硬删除-->
+    <delete id="realDeleteInIds">
+        delete from tb_sys_resource
+        <where>
+            r_id IN
+            <foreach collection="pks" open="(" close=")" separator="," item="pk">
+                #{pk}
+            </foreach>
+        </where>
+    </delete>
+
+</mapper>

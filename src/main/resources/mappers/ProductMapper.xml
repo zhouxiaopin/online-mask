@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.sk.mask.business.mapper.ProductMapper">
+  <resultMap id="BaseResultMap" type="cn.sk.mask.business.pojo.Product">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="category_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="name_en" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="main_image" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sub_images" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sort" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="record_status" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="subtitle" javaType="java.lang.String" jdbcType="LONGVARCHAR" />
+      <arg column="subtitle_en" javaType="java.lang.String" jdbcType="LONGVARCHAR" />
+      <arg column="product_param" javaType="java.lang.String" jdbcType="LONGVARCHAR" />
+      <arg column="product_param_en" javaType="java.lang.String" jdbcType="LONGVARCHAR" />
+      <arg column="product_detail" javaType="java.lang.String" jdbcType="LONGVARCHAR" />
+      <arg column="product_detail_en" javaType="java.lang.String" jdbcType="LONGVARCHAR" />
+      <arg column="expand1" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="expand2" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="expand3" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="expand4" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    p.id, p.category_id, p.name, p.name_en, p.main_image, p.sub_images, p.sort, p.record_status, p.expand1,
+    p.subtitle, p.subtitle_en, p.product_param, p.product_param_en, p.product_detail, p.product_detail_en,
+    p.expand2, p.expand3, p.expand4, p.update_time,p.create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_mask_product p
+    where p.id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_mask_product
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.sk.mask.business.pojo.Product">
+    insert into tb_mask_product (id, category_id, name, 
+      name_en, main_image, sub_images, 
+      sort, record_status, expand1, 
+      expand2, expand3, expand4, 
+      update_time, create_time, subtitle, 
+      subtitle_en, product_param, product_param_en, 
+      product_detail, product_detail_en)
+    values (#{id,jdbcType=INTEGER}, #{categoryId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
+      #{nameEn,jdbcType=VARCHAR}, #{mainImage,jdbcType=VARCHAR}, #{subImages,jdbcType=VARCHAR}, 
+      #{sort,jdbcType=INTEGER}, #{recordStatus,jdbcType=VARCHAR}, #{expand1,jdbcType=VARCHAR}, 
+      #{expand2,jdbcType=VARCHAR}, #{expand3,jdbcType=VARCHAR}, #{expand4,jdbcType=VARCHAR}, 
+      now(), now(), #{subtitle,jdbcType=LONGVARCHAR},
+      #{subtitleEn,jdbcType=LONGVARCHAR}, #{productParam,jdbcType=LONGVARCHAR}, #{productParamEn,jdbcType=LONGVARCHAR}, 
+      #{productDetail,jdbcType=LONGVARCHAR}, #{productDetailEn,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.sk.mask.business.pojo.Product">
+    insert into tb_mask_product
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="categoryId != null">
+        category_id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="nameEn != null">
+        name_en,
+      </if>
+      <if test="mainImage != null">
+        main_image,
+      </if>
+      <if test="subImages != null">
+        sub_images,
+      </if>
+      <if test="sort != null">
+        sort,
+      </if>
+      <if test="recordStatus != null">
+        record_status,
+      </if>
+      <if test="expand1 != null">
+        expand1,
+      </if>
+      <if test="expand2 != null">
+        expand2,
+      </if>
+      <if test="expand3 != null">
+        expand3,
+      </if>
+      <if test="expand4 != null">
+        expand4,
+      </if>
+        update_time,
+        create_time,
+      <if test="subtitle != null">
+        subtitle,
+      </if>
+      <if test="subtitleEn != null">
+        subtitle_en,
+      </if>
+      <if test="productParam != null">
+        product_param,
+      </if>
+      <if test="productParamEn != null">
+        product_param_en,
+      </if>
+      <if test="productDetail != null">
+        product_detail,
+      </if>
+      <if test="productDetailEn != null">
+        product_detail_en,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="categoryId != null">
+        #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="nameEn != null">
+        #{nameEn,jdbcType=VARCHAR},
+      </if>
+      <if test="mainImage != null">
+        #{mainImage,jdbcType=VARCHAR},
+      </if>
+      <if test="subImages != null">
+        #{subImages,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null">
+        #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="recordStatus != null">
+        #{recordStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="expand1 != null">
+        #{expand1,jdbcType=VARCHAR},
+      </if>
+      <if test="expand2 != null">
+        #{expand2,jdbcType=VARCHAR},
+      </if>
+      <if test="expand3 != null">
+        #{expand3,jdbcType=VARCHAR},
+      </if>
+      <if test="expand4 != null">
+        #{expand4,jdbcType=VARCHAR},
+      </if>
+      now(),
+      now(),
+      <if test="subtitle != null">
+        #{subtitle,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="subtitleEn != null">
+        #{subtitleEn,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="productParam != null">
+        #{productParam,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="productParamEn != null">
+        #{productParamEn,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="productDetail != null">
+        #{productDetail,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="productDetailEn != null">
+        #{productDetailEn,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.sk.mask.business.pojo.Product">
+    update tb_mask_product
+    <set>
+      <if test="categoryId != null">
+        category_id = #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="nameEn != null">
+        name_en = #{nameEn,jdbcType=VARCHAR},
+      </if>
+      <if test="mainImage != null">
+        main_image = #{mainImage,jdbcType=VARCHAR},
+      </if>
+      <if test="subImages != null">
+        sub_images = #{subImages,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null">
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="recordStatus != null">
+        record_status = #{recordStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="expand1 != null">
+        expand1 = #{expand1,jdbcType=VARCHAR},
+      </if>
+      <if test="expand2 != null">
+        expand2 = #{expand2,jdbcType=VARCHAR},
+      </if>
+      <if test="expand3 != null">
+        expand3 = #{expand3,jdbcType=VARCHAR},
+      </if>
+      <if test="expand4 != null">
+        expand4 = #{expand4,jdbcType=VARCHAR},
+      </if>
+        update_time = now(),
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="subtitle != null">
+        subtitle = #{subtitle,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="subtitleEn != null">
+        subtitle_en = #{subtitleEn,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="productParam != null">
+        product_param = #{productParam,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="productParamEn != null">
+        product_param_en = #{productParamEn,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="productDetail != null">
+        product_detail = #{productDetail,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="productDetailEn != null">
+        product_detail_en = #{productDetailEn,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.sk.mask.business.pojo.Product">
+    update tb_mask_product
+    set category_id = #{categoryId,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      name_en = #{nameEn,jdbcType=VARCHAR},
+      main_image = #{mainImage,jdbcType=VARCHAR},
+      sub_images = #{subImages,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=INTEGER},
+      record_status = #{recordStatus,jdbcType=VARCHAR},
+      expand1 = #{expand1,jdbcType=VARCHAR},
+      expand2 = #{expand2,jdbcType=VARCHAR},
+      expand3 = #{expand3,jdbcType=VARCHAR},
+      expand4 = #{expand4,jdbcType=VARCHAR},
+      update_time = now(),
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      subtitle = #{subtitle,jdbcType=LONGVARCHAR},
+      subtitle_en = #{subtitleEn,jdbcType=LONGVARCHAR},
+      product_param = #{productParam,jdbcType=LONGVARCHAR},
+      product_param_en = #{productParamEn,jdbcType=LONGVARCHAR},
+      product_detail = #{productDetail,jdbcType=LONGVARCHAR},
+      product_detail_en = #{productDetailEn,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+
+  <!--以下是自定义的-->
+
+  <!-- 表与实体映射 -->
+  <resultMap id="ResultMapCustom" type="cn.sk.mask.business.pojo.ProductCustom" extends="BaseResultMap">
+    <result property="categoryName" column="categoryName"/>
+  </resultMap>
+
+  <!-- 查询条件的sql片段 -->
+
+  <sql id="base_query_condition">
+    <!--<if test="null != greaterThanPLevel">-->
+    <!--AND p_level >= #{greaterThanPLevel,jdbcType=INTEGER}-->
+    <!--</if>-->
+    <if test="null != productCustom">
+      <!-- ${}拼接字符串，有sql注入的维修，少用-->
+      <!--<if test="null != SysPermisCustom.userName and '' != SysPermisCustom.userName">-->
+      <!--AND user_name LIKE CONCAT('%',CONCAT(#{SysPermisCustom.userName},'%'))-->
+      <!--</if>-->
+      <!--<if test="null != sysPermisCustom.pLevel and '' != sysPermisCustom.pLevel">-->
+      <!--AND p_level = #{sysPermisCustom.pLevel,jdbcType=INTEGER}-->
+      <!--</if>-->
+      <if test="null != productCustom.name and '' != productCustom.name">
+        AND p.name LIKE CONCAT('%',CONCAT(#{productCustom.name,jdbcType=VARCHAR},'%'))
+      </if>
+      <if test="null != productCustom.recordStatus and '' != productCustom.recordStatus">
+        AND p.record_status = #{recordStatus,jdbcType=VARCHAR}
+      </if>
+
+    </if>
+  </sql>
+
+  <!--根据条件查询-->
+  <select id="selectListByQueryVo" parameterType="cn.sk.mask.business.pojo.ProductQueryVo" resultMap="ResultMapCustom">
+    select
+    <include refid="Base_Column_List"/>,cg.name categoryName
+    from tb_mask_product p
+    left join tb_mask_category cg
+    on p.category_id = cg.id
+    <where>
+      <!-- 引用sql片段 的id,如果refid指定的id不在本mapper文件中,要前边加namespace -->
+      <include refid="base_query_condition"></include>
+      AND p.record_status != '00'
+    </where>
+    <include refid="cn.sk.mask.base.mapper.IBaseMapper.base_order"/>
+  </select>
+
+
+
+  <!--根据主键软删除-->
+  <update id="deleteInIds">
+    update tb_mask_product
+    set record_status = #{recordStatus,jdbcType=VARCHAR}
+    <where>
+      id IN
+      <foreach collection="pks" open="(" close=")" separator="," item="pk">
+        #{pk}
+      </foreach>
+    </where>
+  </update>
+
+  <!--根据主键硬删除-->
+  <delete id="realDeleteInIds">
+    delete from tb_mask_product
+    <where>
+      id IN
+      <foreach collection="pks" open="(" close=")" separator="," item="pk">
+        #{pk}
+      </foreach>
+    </where>
+  </delete>
+</mapper>

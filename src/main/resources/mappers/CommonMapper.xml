@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.sk.mask.base.mapper.IBaseMapper">
+
+  <!--排序sql片段-->
+  <sql id="base_order">
+    <if test="null != orderBy">
+      <!-- ${}拼接字符串，有sql注入的维修，少用-->
+      order by ${orderBy}
+    </if>
+  </sql>
+
+
+</mapper>

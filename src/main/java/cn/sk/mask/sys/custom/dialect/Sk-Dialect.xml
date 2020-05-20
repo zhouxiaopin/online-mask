@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ =============================================================================
+  ~
+  ~   Copyright (c) 2011-2018, The THYMELEAF team (http://www.thymeleaf.org)
+  ~
+  ~   Licensed under the Apache License, Version 2.0 (the "License");
+  ~   you may not use this file except in compliance with the License.
+  ~   You may obtain a copy of the License at
+  ~
+  ~       http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~   Unless required by applicable law or agreed to in writing, software
+  ~   distributed under the License is distributed on an "AS IS" BASIS,
+  ~   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~   See the License for the specific language governing permissions and
+  ~   limitations under the License.
+  ~
+  ~ =============================================================================
+  -->
+
+<dialect
+		xmlns="http://www.thymeleaf.org/extras/dialect"
+		prefix="sk"
+		namespace-uri="http://www.sk.com/thymeleaf/sk"
+		class="cn.sk.mask.sys.custom.dialect.SkDialect">
+
+
+	<!--标签-->
+	<element-processor
+		name="aBtn"
+		class="cn.sk.mask.sys.custom.tag.AbtnTag">
+	</element-processor>
+	<element-processor
+			name="button"
+			class="cn.sk.mask.sys.custom.tag.ButtonTag">
+	</element-processor>
+	<element-processor
+			name="input"
+			class="cn.sk.mask.sys.custom.tag.InputTag">
+	</element-processor>
+	<element-processor
+			name="label"
+			class="cn.sk.mask.sys.custom.tag.LabelTag">
+	</element-processor>
+	<element-processor
+			name="menuTree"
+			class="cn.sk.mask.sys.custom.tag.MenuTreeTag">
+	</element-processor>
+	<element-processor
+			name="navBar"
+			class="cn.sk.mask.sys.custom.tag.NavBarTag">
+	</element-processor>
+	<element-processor
+			name="select"
+			class="cn.sk.mask.sys.custom.tag.SelectTag">
+	</element-processor>
+	<element-processor
+			name="treeSelect"
+			class="cn.sk.mask.sys.custom.tag.TreeSelectTag">
+	</element-processor>
+
+</dialect>

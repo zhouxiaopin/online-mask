@@ -1,0 +1,207 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sk="http://www.sk.com/thymeleaf/sk" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head th:replace="common/common :: common_header(~{::title},~{},~{},~{})">
+    <!--title,metas,links,scripts-->
+    <title>系统用户列表</title>
+</head>
+<body>
+<!--刷新栏开始-->
+<sk:navBar navText="系统用户管理,系统用户列表"/>
+<!--刷新栏结束-->
+
+<!--*********************-->
+
+<!--数据显示开始-->
+<div class="page-container">
+
+    <!--搜索栏开始-->
+    <!--<div class="text-c">-->
+    <div style="margin:5px 5px 5px">
+        用户名：
+        <sk:input style="width:200px" placeholder="输入用户名" id="userName"/>
+        <sk:button class="btn-success" id="searchBtn" text="查询" dictType="oprt_icon" dictCode="04"/>
+    </div>
+    <!--搜索栏结束-->
+
+    <!--*********************-->
+
+    <!--按钮栏开始-->
+    <div class="cl pd-5 bg-1 bk-gray mt-20">
+        <span class="l">
+            <shiro:hasPermission name="sysManag">
+                <sk:aBtn id="addBtn" class="btn-primary" text="添加用户" dictType="oprt_icon" dictCode="01"/>
+            </shiro:hasPermission>
+            <sk:aBtn onclick="batchDel()" class="btn-danger" text="批量删除" dictType="oprt_icon" dictCode="03"/>
+            <sk:aBtn onclick="batchRealDel()" class="btn-danger" text="批量硬删除" dictType="oprt_icon" dictCode="03"/>
+        </span>
+        <!--<span-->
+        <!--class="r">共有数据：<strong>88</strong> 条</span>-->
+    </div>
+    <!--按钮栏结束-->
+
+    <!--*********************-->
+
+    <!--表格区域开始-->
+    <div class="mt-20">
+        <table id="skDataTable" class="table table-border table-bordered table-hover table-bg table-sort">
+            <thead>
+                <tr class="text-c">
+                    <th><input type="checkbox" id="checkbox" name="checkbox" class="checkall"/></th>
+                    <th>用户名</th>
+                    <th>姓名</th>
+                    <th>性别</th>
+                    <th>手机</th>
+                    <th>邮箱</th>
+                    <th>创建时间</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                    <!--<th width="25"><input type="checkbox" id="checkbox" name="checkbox" class="checkall"/></th>-->
+                    <!--<th width="60">用户名</th>-->
+                    <!--<th width="60">姓名</th>-->
+                    <!--<th width="40">性别</th>-->
+                    <!--<th width="60">手机</th>-->
+                    <!--<th width="80">邮箱</th>-->
+                    <!--<th width="80">创建时间</th>-->
+                    <!--<th width="50">状态</th>-->
+                    <!--<th width="100">操作</th>-->
+                </tr>
+            </thead>
+            <tbody class="text-c">
+            <!--<tr style="text-align:center">-->
+            <!--<td colspan="16">暂无数据</td>-->
+            <!--</tr>-->
+
+            </tbody>
+        </table>
+    </div>
+</div>
+<!--数据显示结束-->
+
+<!--*********************-->
+
+<!--_footer 作为公共模版分离出去-->
+<div th:replace="common/common :: common_footer">
+</div>
+<!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/My97DatePicker/4.8/WdatePicker.js}"></script>
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/datatables/1.10.0/jquery.dataTables.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/laypage/1.2/laypage.js}"></script>
+<script th:inline="none" type="text/javascript">
+
+    //主键
+    var pk = 'uId';
+    //模块标题
+    var modelTile = '用户';
+
+    //修改
+    function to_edit(id) {
+        var url = "initUpdate?"+pk+"=" + id;
+        requestPage(url,{'oprt':skConst.Oprt.UPDATE_OPRT},'修改'+modelTile, 800, 600, function () {//结束事件
+            _dataTables.ajax.reload();
+        });
+        // layer_show("修改"+modelTile, url, 800, 600, function () {//结束事件
+        //     _dataTables.ajax.reload();
+        // });
+
+    }
+
+    //修改密码
+    function updatePassword(id) {
+        var url = "initUpdatePassword?"+pk+"=" + id;
+        requestPage(url,{'oprt':skConst.Oprt.SysUser.UPDATE_PASSWORD_OPRT},'修改密码', 500, 400);
+    }
+
+    var _dataTables;
+
+    $(function () {
+        //添加按钮
+        $('#addBtn').on('click', function () {
+            var url = "initAdd";
+            requestPage(url,{'oprt':skConst.Oprt.ADD_OPRT},'添加'+modelTile, 800, 600, function () {//结束事件
+                // _dataTables.ajax.reload();
+                location.reload();
+            });
+
+            // layer_show('添加'+modelTile, 'initAdd', 800, 600, function () {//结束事件
+            //     // _dataTables.ajax.reload();
+            //     location.reload();
+            // });
+        });
+        _dataTables = SkDataTable('#skDataTable',{
+            "columns": [
+                {
+                    "data": function (dd) {
+                        return '<input type="checkbox" id="empId" name="empId" class="checkchild"  value="' + dd.uId + '" />';
+                    }
+                },
+                {"data": "userName"},
+                {"data": "realName"},
+                {"data": "sex"},
+                {"data": "mobilePhone"},
+                {"data": "email"},
+                {
+                    "data": "createTime", "render": function (data) {
+                        //时间格式化
+                        return moment(data).format(skConst.DEFALT_DATE_FORMAT);
+                    }
+                },
+                {
+                    "data": "recordStatus", "render": function (data) {
+                        var htmlStr = '<div id="td-status"><span class="label ';
+                        if (data == '01') {
+                            //启用
+                            htmlStr += 'label-success radius">';
+
+                        } else {
+                            //禁用
+                            htmlStr += 'radius">';
+                        }
+                        $.each(recordStatus,function (index,item) {
+//                            console.log(JSON.stringify(item))
+                            if (item.code == data){
+                                htmlStr += item.name+'</span></div>';
+                                return false;
+                            }
+                        });
+                        return htmlStr;
+                    }
+                },
+                {
+                    "data": function (dd) {
+                        var str = '<div id="td-manage">';
+                        if (dd.recordStatus == '01') {
+                            str += '<a title="禁用" href="javascript:;" onclick="updateDisableRs(this,' + dd.uId + ',\'' +pk+'\')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe631;</i></a>';
+                        } else {
+                            str += '<a title="启用" href="javascript:;" onclick="updateAbleRs(this,' + dd.uId + ',\'' +pk+'\')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe615;</i></a>';
+                        }
+
+                        str += '<a title="修改" href="javascript:;" onclick="to_edit(' + dd.uId + ')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>';
+                        str += '<a title="修改密码" href="javascript:;" onclick="updatePassword(' + dd.uId + ')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe63f;</i></a>';
+                        str += '<a title="删除" href="javascript:;" onclick="to_del(this,' + dd.uId + ')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>';
+                        str += '</div>';
+                        return str;
+                    }
+                }
+            ],
+            "ajax": {
+                // "url": "query",
+                "data": function (d) {
+                    d['sysUserCustom.userName'] = $("#userName").val().trim();
+
+                },
+            },
+        });
+        //搜索按钮点击事件
+        $('#searchBtn').on('click', function () {
+//            $("input[type=checkbox][name='checkbox']").prop('checked', false);
+            _dataTables.ajax.reload();
+        });
+
+    });
+
+
+</script>
+</body>
+</html>

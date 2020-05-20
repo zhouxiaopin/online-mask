@@ -1,0 +1,183 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sk="http://www.w3.org/1999/xhtml">
+<head th:replace="common/common :: common_header(~{::title},~{},~{},~{})">
+    <!--title,metas,links,scripts-->
+    <title>数字字典列表</title>
+</head>
+<body>
+<!--刷新栏开始-->
+<sk:navBar navText="数字字典,数字字典列表"/>
+<!--刷新栏结束-->
+
+<!--*********************-->
+
+<!--数据显示开始-->
+<div class="page-container">
+
+    <!--搜索栏开始-->
+    <!--<div class="text-c">-->
+    <div style="margin:5px 5px 5px">
+        字典类型：
+        <sk:input style="width:200px" placeholder="输入字典类型" id="dictType"/>
+        字典编码：
+        <sk:input style="width:200px" placeholder="输入字典编码" id="dictCode"/>
+        <sk:button class="btn-success" id="searchBtn" text="查询" dictType="oprt_icon" dictCode="04"/>
+    </div>
+    <!--搜索栏结束-->
+
+    <!--*********************-->
+
+    <!--按钮栏开始-->
+    <div class="cl pd-5 bg-1 bk-gray mt-20">
+        <span class="l">
+            <sk:aBtn id="addBtn" class="btn-primary" text="添加字典" dictType="oprt_icon" dictCode="01"/>
+           <!-- <sk:aBtn onclick="batchDel()" class="btn-danger" text="批量删除" dictType="oprt_icon" dictCode="03"/>
+            <sk:aBtn onclick="batchRealDel()" class="btn-danger" text="批量硬删除" dictType="oprt_icon" dictCode="03"/>-->
+        </span>
+        <!--<span-->
+        <!--class="r">共有数据：<strong>88</strong> 条</span>-->
+    </div>
+    <!--按钮栏结束-->
+
+    <!--*********************-->
+
+    <!--表格区域开始-->
+    <div class="mt-20">
+        <table id="skDataTable" class="table table-border table-bordered table-hover table-bg table-sort">
+            <thead>
+            <tr class="text-c">
+                <th width="25"><input type="checkbox" id="checkbox" name="checkbox" class="checkall"/></th>
+                <th width="60">字典类型</th>
+                <th width="60">字典编码</th>
+                <th width="80">编码名称</th>
+                <th width="60">类型描述</th>
+                <th width="60">排序</th>
+                <th width="60">备注</th>
+                <th width="80">创建时间</th>
+                <th width="50">状态</th>
+                <th width="100">操作</th>
+
+            </tr>
+
+            </thead>
+            <tbody class="text-c">
+            <!--<tr style="text-align:center">-->
+            <!--<td colspan="16">暂无数据</td>-->
+            <!--</tr>-->
+
+            </tbody>
+        </table>
+    </div>
+</div>
+<!--数据显示结束-->
+
+<!--*********************-->
+
+<!--_footer 作为公共模版分离出去-->
+<div th:replace="common/common :: common_footer">
+</div>
+<!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/My97DatePicker/4.8/WdatePicker.js}"></script>
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/datatables/1.10.0/jquery.dataTables.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/laypage/1.2/laypage.js}"></script>
+<script th:inline="none" type="text/javascript">
+    //主键
+    var pk = 'dictId';
+    //模块标题
+    var modelTile = '字典';
+    var _dataTables;
+
+    //修改
+    function to_edit(id) {
+        var url = "initUpdate?"+pk+"=" + id;
+        requestPage(url,{'oprt':skConst.Oprt.UPDATE_OPRT},'修改'+modelTile, 800, 600, function () {//结束事件
+            _dataTables.ajax.reload();
+        });
+        // layer_show("修改"+modelTile, url, 800, 600, function () {//结束事件
+        //     _dataTables.ajax.reload();
+        // });
+    }
+
+    $(function () {
+        //添加按钮
+        $('#addBtn').on('click', function () {
+            var url = "initAdd";
+            requestPage(url,{'oprt':skConst.Oprt.ADD_OPRT},'添加'+modelTile, 800, 600, function () {//结束事件
+                // _dataTables.ajax.reload();
+                location.reload();
+            });
+            // layer_show('添加'+modelTile, 'initAdd', 800, 580,function (index, layero) {//结束事件
+            //     _dataTables.ajax.reload();
+            // });
+        });
+        _dataTables = SkDataTable('#skDataTable',{
+            "columns": [
+                {
+                    "data": function (dd) {
+                        return '<input type="checkbox" id="dictId" name="dictId" class="checkchild"  value="' + dd.dictId + '" />';
+                    }
+                },
+                {"data": "dictType"},
+                {"data": "dictCode"},
+                {"data": "codeName"},
+                {"data": "description"},
+                {"data": "sort"},
+                {"data": "remark"},
+                {
+                    "data": "createTime", "render": function (data) {
+                        //时间格式化
+                        return moment(data).format(skConst.DEFALT_DATE_FORMAT);
+                    }
+                },
+                {
+                    "data": "recordStatus", "render": function (data) {
+                        if (data == skConst.RecordStatus.ABLE) {
+                            //启用
+                            return '<div id="td-status"><span class="label label-success radius">'+skConst.RecordStatus[data]+'</span></div>';
+                        } else {
+                            //禁用
+                            return '<div id="td-status"><span class="label radius">'+skConst.RecordStatus[data]+'</span></div>';
+                        }
+                    }
+                },
+                {
+                    "data": function (dd) {
+                        var str = '<div id="td-manage">';
+                        if (dd.recordStatus == '01') {
+                            str += '<a title="禁用" href="javascript:;" onclick="updateDisableRs(this,' + dd.dictId + ',\'' +pk+'\')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe631;</i></a>';
+                        } else {
+                            str += '<a title="启用" href="javascript:;" onclick="updateAbleRs(this,' + dd.dictId + ',\'' +pk+'\')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe615;</i></a>';
+                        }
+
+                        str += '<a title="修改" href="javascript:;" onclick="to_edit(' + dd.dictId + ')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>';
+                        // str += '<a title="删除" href="javascript:;" onclick="to_del(this,' + dd.dictId + ')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>';
+                        str += '</div>';
+                        return str;
+                    }
+                }
+            ],
+            "ajax": {
+                // "url": "query",
+                // "type": "POST",
+                "data": function (d) {
+                    d['sysDictCustom.dictType'] = $("#dictType").val().trim();
+                    d['sysDictCustom.dictCode'] = $("#dictCode").val().trim();
+
+                }
+            },
+        });
+
+        //搜索按钮点击事件
+        $('#searchBtn').on('click', function () {
+//            $("input[type=checkbox][name='checkbox']").prop('checked', false);
+            _dataTables.ajax.reload();
+        });
+
+    });
+
+
+</script>
+</body>
+</html>

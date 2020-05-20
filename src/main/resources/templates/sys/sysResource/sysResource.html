@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sk="http://www.w3.org/1999/xhtml">
+<head th:replace="common/common :: common_header(~{::title},~{},~{},~{})">
+    <!--title,metas,links,scripts-->
+    <title>系统资源管理</title>
+</head>
+<body>
+<article class="page-container">
+    <form class="form form-horizontal" id="sysPermisForm">
+        <!--<form th:action="${oprt}" method="post" class="form form-horizontal" id="sysUserForm">-->
+        <div>
+            <label id="retMsg" style="display:block;text-align: center;color: #FF0000"
+                   th:inline="text">[[${msg}]]</label>
+            <input type="hidden" id="rId" name="rId" th:value="${obj.rId}" value=""/>
+        </div>
+
+        <div th:switch="${oprt}">
+            <!--添加开始-->
+            <div th:case="add">
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" required="true" text="资源名："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.rName}" id="rName" name="rName"/>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="资源url："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.rUrl}" id="rUrl" name="rUrl"/>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="类型："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:select id="rType" name="rType" th:value="${obj.rType}" dictType="res_type"/>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="父资源："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:treeSelect id="parentId" name="parentId" th:value="${obj.parentId}" type="radio" scCode="sys_resource_tree"/>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="级别："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:select id="rLevel" name="rLevel" th:value="${obj.rLevel}" dictType="res_level"/>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="排序："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.rSort}" id="rSort" name="rSort"/>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="左边图标："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:select id="leftIcon" name="leftIcon" th:value="${obj.leftIcon}" dictType="menu_icon"/>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="描述："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <textarea name="descri" cols="22" rows="4" class="textarea"
+                                  onKeyUp="$.Huitextarealength(this,100)"
+                                  th:inline="text">
+                    [[${obj.descri}]]
+                </textarea>
+                        <p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>
+                    </div>
+                </div>
+            </div>
+            <!--添加结束-->
+
+            <!-- ********************** -->
+
+            <!--修改开始-->
+            <div th:case="update">
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" required="true" text="资源名："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.rName}" id="rName" name="rName"/>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="资源url："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.rUrl}" id="rUrl" name="rUrl"/>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="类型："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:select id="rType" name="rType" th:value="${obj.rType}" dictType="res_type"/>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="父资源："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:treeSelect id="parentId" name="parentId" th:value="${obj.parentId}" type="radio" scCode="sys_resource_tree"/>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="级别："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:select id="rLevel" name="rLevel" th:value="${obj.rLevel}" dictType="res_level"/>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="排序："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:input th:value="${obj.rSort}" id="rSort" name="rSort"/>
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2" text="左边图标："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:select id="leftIcon" name="leftIcon" th:value="${obj.leftIcon}" dictType="menu_icon"/>
+                    </div>
+                    <sk:label class="col-xs-2 col-sm-2" text="描述："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <textarea name="descri" cols="22" rows="4" class="textarea"
+                                  onKeyUp="$.Huitextarealength(this,100)"
+                                  th:inline="text">
+                    [[${obj.descri}]]
+                </textarea>
+                        <p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>
+                    </div>
+                </div>
+            </div>
+            <!--修改结束-->
+
+            <!-- ********************** -->
+
+        </div>
+
+
+        <div class="row cl">
+            <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+                <sk:button class="btn-success" type="reset" text="&nbsp;&nbsp;重置&nbsp;&nbsp;"/>
+                <sk:button class="btn-primary" type="submit" text="&nbsp;&nbsp;提交&nbsp;&nbsp;"/>
+            </div>
+        </div>
+    </form>
+</article>
+
+<!--_footer 作为公共模版分离出去-->
+<div th:replace="common/common :: common_footer">
+</div>
+<!--/_footer 作为公共模版分离出去-->
+
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/My97DatePicker/4.8/WdatePicker.js}"></script>
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/jquery.validation/1.14.0/jquery.validate.js}"></script>
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/jquery.validation/1.14.0/validate-methods.js}"></script>
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/jquery.validation/1.14.0/messages_zh.js}"></script>
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/zTree/v3/js/jquery.ztree.all-3.5.min.js}"></script>
+
+<script type="text/javascript" th:inline="javascript">
+    var oprt = [[${oprt}]];
+</script>
+<script type="text/javascript">
+    $(function () {
+        $('.skin-minimal input').iCheck({
+            checkboxClass: 'icheckbox-blue',
+            radioClass: 'iradio-blue',
+            increaseArea: '20%'
+        });
+
+        $("#sysPermisForm").validate({
+            rules: {
+                pFlag: {
+                    required: true
+                },
+                pName: {
+                    required: true
+                },
+
+            },
+            onkeyup: false,
+            focusCleanup: true,
+            success: "valid",
+            submitHandler: function (form) {
+                /*$(form).ajaxSubmit();
+                 parent.location.reload();
+                 var index = parent.layer.getFrameIndex(window.name);
+                 //parent.$('.btn-refresh').click();
+                 parent.layer.close(index);*/
+                var url = oprt;
+                var param = $(form).serialize();
+                sk.ajaxRequest(url, param, function (r) {
+                    if (r.code == '0') {
+                        sk.successMsg(r.msg);
+                        if (oprt != 'add') {
+                            setTimeout(function () {
+                                // parent.location.reload();
+//                                var index = parent.layer.getFrameIndex(window.name);
+//                                parent.layer.close(index);
+                                layer_close();
+                            }, 800);
+                        }
+                    } else {
+                        sk.failMsg(r.msg);
+                    }
+
+                });
+//                return false; // 阻止表单自动提交事件
+            }
+        });
+
+    });
+</script>
+
+
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

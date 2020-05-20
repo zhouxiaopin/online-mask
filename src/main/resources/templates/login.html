@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sk="http://www.w3.org/1999/xhtml">
+<head th:replace="common/common :: common_header(~{::title},~{::meta},~{::link},~{})">
+    <!--title,metas,links,scripts-->
+    <title>TICC报修后台管理系统-后台登录</title>
+    <meta name="keywords" content="TICC-报修后台登录">
+    <meta name="description" content="sk persion dev">
+    <link th:href="@{/static/H-ui.admin/static/h-ui.admin/css/H-ui.login.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div class="header"></div>
+<div class="loginWraper">
+    <div class="loginBox">
+        <form id="loginForm" class="form form-horizontal">
+            <div class="row cl">
+                <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60d;</i></label>
+                <div class="formControls col-xs-9">
+                    <sk:input id="userName" name="userName" placeholder="请输入用户名" class="size-L"/>
+                </div>
+            </div>
+            <div class="row cl">
+                <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60e;</i></label>
+                <div class="formControls col-xs-9">
+                    <sk:input id="password" type="password" name="password" placeholder="请输入密码" class="size-L"/>
+                </div>
+            </div>
+            <div class="row cl">
+                <div class="formControls col-xs-9 col-xs-offset-3">
+                    <sk:input id="verifCode" name="verifCode" placeholder="请输入验证码" class="size-L" style="width:150px;"/>
+                    <canvas id="verifCodeCanvas" width="100px" height="40px">浏览器不支持</canvas>
+                    <input type="hidden" id="verifCode2" name="verifCode2"/>
+                    <a id="changeVerifCode" href="javascript:void(0);">看不清，换一张</a></div>
+            </div>
+            <div class="row cl">
+                <div class="formControls col-xs-8 col-xs-offset-3">
+                    <label for="rememberPassword">
+                        <input type="checkbox" name="rememberPassword" id="rememberPassword">
+                        记住密码(7天)
+                    </label>
+                </div>
+            </div>
+            <div class="row cl">
+                <div class="formControls col-xs-8 col-xs-offset-3">
+                    <input name="" type="submit" class="btn btn-success radius size-L"
+                           value="&nbsp;登&nbsp;&nbsp;&nbsp;&nbsp;录&nbsp;">
+                    <input name="" type="reset" class="btn btn-default radius size-L"
+                           value="&nbsp;取&nbsp;&nbsp;&nbsp;&nbsp;消&nbsp;">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="footer">Copyright 广州市xxxx by TICC-报修 v1.0</div>
+<!--_footer 作为公共模版分离出去-->
+<div th:replace="common/common :: common_footer">
+</div>
+<!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/jquery.validation/1.14.0/jquery.validate.js}"></script>
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/jquery.validation/1.14.0/validate-methods.js}"></script>
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/jquery.validation/1.14.0/messages_zh.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/utils/jquery.cookie-1.4.1.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/utils/jquery.base-64.min.js}"></script>
+
+<script type="text/javascript" th:inline="javascript">
+    var oprt = [[${oprt}]];
+</script>
+<script type="text/javascript">
+    $(function () {
+        $('#verifCode2').val(drawPic());
+        //用户名失去焦点事件
+        $('#userName').on('blur',function () {
+            readPassword();
+        });
+        //更换验证码点击事件
+        $('#changeVerifCode').on('click',function (e) {
+            //先阻止画布默认点击发生的行为再执行drawPic()方法
+            e.preventDefault();
+            $('#verifCode2').val(drawPic());
+            
+        });
+        $("#loginForm").validate({
+            rules: {
+                userName: {
+                    required: true
+                },
+                password: {
+                    required: true
+                },
+                verifCode: {
+                    required: true,
+                },
+
+            },
+            onkeyup: false,
+            focusCleanup: true,
+            success: "valid",
+            submitHandler: function (form) {
+                if ($('#verifCode').val().trim() != $('#verifCode2').val().trim()){
+                    //更新验证码
+                    $('#verifCode2').val(drawPic());
+                    sk.failMsg('验证码错误');
+                    return false;
+                }
+                savePassword();
+                var url = oprt;
+                // var url = basePath+'employee/'+oprt;
+                var param = $(form).serialize();
+                // console.log(url);
+                blockPage('正在登录 , 请稍后 ...');
+                sk.ajaxRequest(url, param, function (r) {
+                    if (r.code == '0') {
+                        // sk.successMsg(r.msg);
+                        // setTimeout(function () {
+                        //     // console.info(basePath+"/index");
+                        //     window.location.href=basePath+"index";
+                        // }, 800);
+                        window.location.href=basePath+"index";
+                    } else {
+                        //更新验证码
+                        $('#verifCode2').val(drawPic());
+                        sk.failMsg(r.msg);
+                    }
+                    unblockPage();
+
+                });
+               return false; // 阻止表单自动提交事件
+
+
+            }
+        });
+
+    });
+    
+    //保存密码
+    function savePassword() {
+        var COOKIE_NAME = $('#userName').val();
+        if (!COOKIE_NAME){
+            return;
+        }
+        if ($(':checkbox[name="rememberPassword"]').is(':checked')){
+            var date = new Date();
+            date.setTime(date.getTime() + (7 * 24 * 60 * 60 * 1000)); //七天后的这个时候过期
+            var password = $("#password").val().split("").reverse().join("");
+            $.cookie(COOKIE_NAME,  $.base64.encode(password), { expires: date });
+        }else{
+            // $.removeCookie(COOKIE_NAME);//删除cookie
+        }
+    }
+
+    //读取密码
+    function readPassword() {
+        var COOKIE_NAME = $('#userName').val();
+        if(COOKIE_NAME&&$.cookie(COOKIE_NAME)){
+            var password = $.base64.decode($.cookie(COOKIE_NAME)).split("").reverse().join("");
+            $("#password").val(password);
+            // console.log(password)
+        }
+    }
+
+    //生成随机数
+    function randomNum(min, max) {
+        return Math.floor(Math.random() * (max - min) + min);
+    }
+    //生成随机颜色RGB分量
+    function randomColor(min, max) {
+        var _r = randomNum(min, max);
+        var _g = randomNum(min, max);
+        var _b = randomNum(min, max);
+        return "rgb(" + _r + "," + _g + "," + _b + ")";
+    }
+    //画图片
+    function drawPic() {
+        //获取到元素canvas
+        var $canvas = document.getElementById("verifCodeCanvas");
+        var _str = "0123456789";//设置随机数库
+        var _picTxt = "";//随机数
+        var _num = 4;//4个随机数字
+        var _width = $canvas.width;
+        var _height = $canvas.height;
+        var ctx = $canvas.getContext("2d");//获取 context 对象
+        ctx.textBaseline = "bottom";//文字上下对齐方式--底部对齐
+        ctx.fillStyle = randomColor(180, 240);//填充画布颜色
+        ctx.fillRect(0, 0, _width, _height);//填充矩形--画画
+        for (var i = 0; i < _num; i++) {
+            var x = (_width - 10) / _num * i + 10;
+            var y = randomNum(_height / 2, _height);
+            var deg = randomNum(-45, 45);
+            var txt = _str[randomNum(0, _str.length)];
+            _picTxt += txt;//获取一个随机数
+            ctx.fillStyle = randomColor(10, 100);//填充随机颜色
+            ctx.font = randomNum(16, 40) + "px SimHei";//设置随机数大小，字体为SimHei
+            ctx.translate(x, y);//将当前xy坐标作为原始坐标
+            ctx.rotate(deg * Math.PI / 180);//旋转随机角度
+            ctx.fillText(txt, 0, 0);//绘制填色的文本
+            ctx.rotate(-deg * Math.PI / 180);
+            ctx.translate(-x, -y);
+        }
+        for (var i = 0; i < _num; i++) {
+            //定义笔触颜色
+            ctx.strokeStyle = randomColor(90, 180);
+            ctx.beginPath();
+            //随机划线--4条路径
+            ctx.moveTo(randomNum(0, _width), randomNum(0, _height));
+            ctx.lineTo(randomNum(0, _width), randomNum(0, _height));
+            ctx.stroke();
+        }
+        for (var i = 0; i < _num * 10; i++) {
+            ctx.fillStyle = randomColor(0, 255);
+            ctx.beginPath();
+            //随机画原，填充颜色
+            ctx.arc(randomNum(0, _width), randomNum(0, _height), 1, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+        return _picTxt;//返回随机数字符串
+    }
+</script>
+
+</body>
+</html>

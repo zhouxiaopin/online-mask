@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <!-- 全局setting配置，根据需要添加 -->
+    <settings>
+        <!--使用jdbc的getGeneratedKeys获取数据库自增主键值-->
+        <setting name="useGeneratedKeys" value="true"/>
+        <!--使用支持别名 默认：true-->
+        <setting name="useColumnLabel" value="true"/>
+        <!--开启驼峰命名转换:Table{create_time} -> Entity{createTime}-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+
+    <!-- 配置别名 -->
+    <typeAliases>
+        <!-- 批量扫描别名 :首字母小写或大写的类名-->
+        <package name="cn.sk.mask.base.pojo"/>
+        <package name="cn.sk.mask.sys.pojo"/>
+        <package name="cn.sk.mask.business.pojo"/>
+<!--        <package name="cn.gzticc.busanalysis.business.pojo"/>
+        <package name="cn.gzticc.busanalysis.frame.pojo"/>-->
+
+    </typeAliases>
+
+    <!--
+        配置mapper:
+        由于使用spring和mybatis的整合包进行mapper扫描，这里不需要配置了。
+        必须遵循：Mapper.xml和mapper.java文件同名且在一个目录
+     -->
+
+    <!-- <mappers>
+
+    </mappers> -->
+</configuration>

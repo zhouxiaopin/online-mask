@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.sk.mask.sys.mapper.SysSqlConfMapper">
+  <resultMap id="BaseResultMap" type="cn.sk.mask.sys.pojo.SysSqlConf">
+    <constructor>
+      <idArg column="sc_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="sc_code" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sc_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sc_statement" javaType="java.lang.String" jdbcType="LONGVARCHAR" />
+      <arg column="sc_type" javaType="java.lang.String" jdbcType="CHAR" />
+      <arg column="descri" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="opt_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="field_1" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="field_2" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="field_3" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="field_4" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="record_status" javaType="java.lang.String" jdbcType="CHAR" />
+      <arg column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    sc_id, sc_code, sc_name, sc_statement, sc_type, descri, opt_id, field_1, field_2, field_3, field_4,
+    record_status, update_time, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapCustom">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_sys_sql_conf
+    where sc_id = #{scId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_sys_sql_conf
+    where sc_id = #{scId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.sk.mask.sys.pojo.SysSqlConf">
+    insert into tb_sys_sql_conf (sc_id, sc_code, sc_name, sc_statement,
+      sc_type, descri, opt_id, 
+      field_1, field_2, field_3, 
+      field_4, record_status, update_time, 
+      create_time)
+    values (#{scId,jdbcType=INTEGER}, #{scCode,jdbcType=VARCHAR}, #{scName,jdbcType=VARCHAR}, #{scStatement,jdbcType=LONGVARCHAR},
+    #{scType,jdbcType=CHAR}, #{descri,jdbcType=VARCHAR}, #{optId,jdbcType=INTEGER},
+      #{field1,jdbcType=VARCHAR}, #{field2,jdbcType=VARCHAR}, #{field3,jdbcType=VARCHAR}, 
+      #{field4,jdbcType=VARCHAR}, #{recordStatus,jdbcType=CHAR}, now(),
+      now())
+  </insert>
+  <insert id="insertSelective" parameterType="cn.sk.mask.sys.pojo.SysSqlConf">
+    insert into tb_sys_sql_conf
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="scId != null">
+        sc_id,
+      </if>
+      <if test="scCode != null">
+        sc_code,
+      </if>
+      <if test="scName != null">
+        sc_name,
+      </if>
+      <if test="scStatement != null">
+        sc_statement,
+      </if>
+      <if test="scType != null">
+        sc_type,
+      </if>
+      <if test="descri != null">
+        descri,
+      </if>
+      <if test="optId != null">
+        opt_id,
+      </if>
+      <if test="field1 != null">
+        field_1,
+      </if>
+      <if test="field2 != null">
+        field_2,
+      </if>
+      <if test="field3 != null">
+        field_3,
+      </if>
+      <if test="field4 != null">
+        field_4,
+      </if>
+      <if test="recordStatus != null">
+        record_status,
+      </if>
+        update_time,
+        create_time,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="scId != null">
+        #{scId,jdbcType=INTEGER},
+      </if>
+      <if test="scCode != null">
+        #{scCode,jdbcType=VARCHAR},
+      </if>
+      <if test="scName != null">
+        #{scName,jdbcType=VARCHAR},
+      </if>
+      <if test="scStatement != null">
+        #{scStatement,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="scType != null">
+        #{scType,jdbcType=CHAR},
+      </if>
+      <if test="descri != null">
+        #{descri,jdbcType=VARCHAR},
+      </if>
+      <if test="optId != null">
+        #{optId,jdbcType=INTEGER},
+      </if>
+      <if test="field1 != null">
+        #{field1,jdbcType=VARCHAR},
+      </if>
+      <if test="field2 != null">
+        #{field2,jdbcType=VARCHAR},
+      </if>
+      <if test="field3 != null">
+        #{field3,jdbcType=VARCHAR},
+      </if>
+      <if test="field4 != null">
+        #{field4,jdbcType=VARCHAR},
+      </if>
+      <if test="recordStatus != null">
+        #{recordStatus,jdbcType=CHAR},
+      </if>
+        now(),
+        now(),
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.sk.mask.sys.pojo.SysSqlConf">
+    update tb_sys_sql_conf
+    <set>
+      <if test="scCode != null">
+        sc_code = #{scCode,jdbcType=VARCHAR},
+      </if>
+      <if test="scName != null">
+        sc_name = #{scName,jdbcType=VARCHAR},
+      </if>
+      <if test="scStatement != null">
+        sc_statement = #{scStatement,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="scType != null">
+        sc_type = #{scType,jdbcType=CHAR},
+      </if>
+      <if test="descri != null">
+        descri = #{descri,jdbcType=VARCHAR},
+      </if>
+      <if test="optId != null">
+        opt_id = #{optId,jdbcType=INTEGER},
+      </if>
+      <if test="field1 != null">
+        field_1 = #{field1,jdbcType=VARCHAR},
+      </if>
+      <if test="field2 != null">
+        field_2 = #{field2,jdbcType=VARCHAR},
+      </if>
+      <if test="field3 != null">
+        field_3 = #{field3,jdbcType=VARCHAR},
+      </if>
+      <if test="field4 != null">
+        field_4 = #{field4,jdbcType=VARCHAR},
+      </if>
+      <if test="recordStatus != null">
+        record_status = #{recordStatus,jdbcType=CHAR},
+      </if>
+        update_time = now(),
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where sc_id = #{scId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.sk.mask.sys.pojo.SysSqlConf">
+    update tb_sys_sql_conf
+    set sc_code = #{scCode,jdbcType=VARCHAR},
+      sc_name = #{scName,jdbcType=VARCHAR},
+      sc_statement = #{scStatement,jdbcType=LONGVARCHAR},
+      sc_type = #{scType,jdbcType=CHAR},
+      descri = #{descri,jdbcType=VARCHAR},
+      opt_id = #{optId,jdbcType=INTEGER},
+      field_1 = #{field1,jdbcType=VARCHAR},
+      field_2 = #{field2,jdbcType=VARCHAR},
+      field_3 = #{field3,jdbcType=VARCHAR},
+      field_4 = #{field4,jdbcType=VARCHAR},
+      record_status = #{recordStatus,jdbcType=CHAR},
+      update_time = now(),
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where sc_id = #{scId,jdbcType=INTEGER}
+  </update>
+
+  <!--以下是自定义的-->
+
+  <!-- 表与实体映射 -->
+  <resultMap id="ResultMapCustom" type="cn.sk.mask.sys.pojo.SysSqlConfCustom" extends="BaseResultMap">
+
+  </resultMap>
+
+  <!-- 查询条件的sql片段 -->
+
+  <sql id="base_query_condition">
+    <if test="null != sysSqlConfCustom">
+      <!-- ${}拼接字符串，有sql注入的维修，少用-->
+      <if test="isNoLike.scCode">
+        <if test="null != sysSqlConfCustom.scCode and '' != sysSqlConfCustom.scCode">
+          AND sc_code = #{sysSqlConfCustom.scCode,jdbcType=VARCHAR}
+        </if>
+      </if>
+      <if test="!isNoLike.scCode">
+        <if test="null != sysSqlConfCustom.scCode and '' != sysSqlConfCustom.scCode">
+          AND sc_code LIKE CONCAT('%',CONCAT(#{sysSqlConfCustom.scCode,jdbcType=VARCHAR},'%'))
+        </if>
+      </if>
+      <!--<if test="null != sysDictCustom.dictCode and '' != sysDictCustom.dictCode">-->
+        <!--AND dict_code = #{sysDictCustom.dictCode,jdbcType=VARCHAR}-->
+      <!--</if>-->
+      <if test="null != sysSqlConfCustom.recordStatus and '' != sysSqlConfCustom.recordStatus">
+        AND record_status = #{sysSqlConfCustom.recordStatus,jdbcType=VARCHAR}
+      </if>
+    </if>
+  </sql>
+
+  <!--排序sql片段-->
+
+  <!--根据条件查询-->
+  <select id="selectListByQueryVo" parameterType="cn.sk.mask.sys.pojo.SysSqlConfQueryVo" resultMap="ResultMapCustom">
+    select
+    <include refid="Base_Column_List" />
+    from tb_sys_sql_conf
+    <where>
+      <!-- 引用sql片段 的id,如果refid指定的id不在本mapper文件中,要前边加namespace -->
+      <include refid="base_query_condition"></include>
+      AND record_status != '00'
+    </where>
+    <include refid="cn.sk.mask.base.mapper.IBaseMapper.base_order"/>
+  </select>
+
+  <!--根据主键软删除-->
+  <update id="deleteInIds">
+    update tb_sys_sql_conf
+    set record_status = #{recordStatus,jdbcType=VARCHAR}
+    <where>
+      sc_id IN
+      <foreach collection="pks" open="(" close=")" separator="," item="pk">
+        #{pk}
+      </foreach>
+    </where>
+  </update>
+
+  <!--根据主键硬删除-->
+  <delete id="realDeleteInIds">
+    delete from tb_sys_sql_conf
+    <where>
+      sc_id IN
+      <foreach collection="pks" open="(" close=")" separator="," item="pk">
+        #{pk}
+      </foreach>
+    </where>
+  </delete>
+
+</mapper>

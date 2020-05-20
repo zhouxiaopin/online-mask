@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.sk.mask.sys.mapper.SysDictMapper">
+  <resultMap id="BaseResultMap" type="cn.sk.mask.sys.pojo.SysDict">
+    <constructor>
+      <idArg column="dict_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="dict_type" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="dict_code" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="code_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="description" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sort" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="remark" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="field_1" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="field_2" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="field_3" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="field_4" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="field_5" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="field_6" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="record_status" javaType="java.lang.String" jdbcType="CHAR" />
+      <arg column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    dict_id, dict_type, dict_code, code_name, description, sort, remark, field_1, field_2, 
+    field_3, field_4, field_5, field_6, record_status, update_time, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapCustom">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_sys_dict
+    where dict_id = #{dictId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_sys_dict
+    where dict_id = #{dictId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.sk.mask.sys.pojo.SysDict">
+    insert into tb_sys_dict (dict_id, dict_type, dict_code, 
+      code_name, description, sort, 
+      remark, field_1, field_2, 
+      field_3, field_4, field_5, 
+      field_6, record_status, update_time, 
+      create_time)
+    values (#{dictId,jdbcType=INTEGER}, #{dictType,jdbcType=VARCHAR}, #{dictCode,jdbcType=VARCHAR}, 
+      #{codeName,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, 
+      #{remark,jdbcType=VARCHAR}, #{field1,jdbcType=VARCHAR}, #{field2,jdbcType=VARCHAR}, 
+      #{field3,jdbcType=VARCHAR}, #{field4,jdbcType=VARCHAR}, #{field5,jdbcType=VARCHAR}, 
+      #{field6,jdbcType=VARCHAR}, #{recordStatus,jdbcType=CHAR}, now(),
+      now())
+  </insert>
+  <insert id="insertSelective" parameterType="cn.sk.mask.sys.pojo.SysDict">
+    insert into tb_sys_dict
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="dictId != null">
+        dict_id,
+      </if>
+      <if test="dictType != null">
+        dict_type,
+      </if>
+      <if test="dictCode != null">
+        dict_code,
+      </if>
+      <if test="codeName != null">
+        code_name,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="sort != null">
+        sort,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="field1 != null">
+        field_1,
+      </if>
+      <if test="field2 != null">
+        field_2,
+      </if>
+      <if test="field3 != null">
+        field_3,
+      </if>
+      <if test="field4 != null">
+        field_4,
+      </if>
+      <if test="field5 != null">
+        field_5,
+      </if>
+      <if test="field6 != null">
+        field_6,
+      </if>
+      <if test="recordStatus != null">
+        record_status,
+      </if>
+        update_time,
+        create_time,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="dictId != null">
+        #{dictId,jdbcType=INTEGER},
+      </if>
+      <if test="dictType != null">
+        #{dictType,jdbcType=VARCHAR},
+      </if>
+      <if test="dictCode != null">
+        #{dictCode,jdbcType=VARCHAR},
+      </if>
+      <if test="codeName != null">
+        #{codeName,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null">
+        #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="field1 != null">
+        #{field1,jdbcType=VARCHAR},
+      </if>
+      <if test="field2 != null">
+        #{field2,jdbcType=VARCHAR},
+      </if>
+      <if test="field3 != null">
+        #{field3,jdbcType=VARCHAR},
+      </if>
+      <if test="field4 != null">
+        #{field4,jdbcType=VARCHAR},
+      </if>
+      <if test="field5 != null">
+        #{field5,jdbcType=VARCHAR},
+      </if>
+      <if test="field6 != null">
+        #{field6,jdbcType=VARCHAR},
+      </if>
+      <if test="recordStatus != null">
+        #{recordStatus,jdbcType=CHAR},
+      </if>
+      now(),
+      now(),
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.sk.mask.sys.pojo.SysDict">
+    update tb_sys_dict
+    <set>
+      <if test="dictType != null">
+        dict_type = #{dictType,jdbcType=VARCHAR},
+      </if>
+      <if test="dictCode != null">
+        dict_code = #{dictCode,jdbcType=VARCHAR},
+      </if>
+      <if test="codeName != null">
+        code_name = #{codeName,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null">
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="field1 != null">
+        field_1 = #{field1,jdbcType=VARCHAR},
+      </if>
+      <if test="field2 != null">
+        field_2 = #{field2,jdbcType=VARCHAR},
+      </if>
+      <if test="field3 != null">
+        field_3 = #{field3,jdbcType=VARCHAR},
+      </if>
+      <if test="field4 != null">
+        field_4 = #{field4,jdbcType=VARCHAR},
+      </if>
+      <if test="field5 != null">
+        field_5 = #{field5,jdbcType=VARCHAR},
+      </if>
+      <if test="field6 != null">
+        field_6 = #{field6,jdbcType=VARCHAR},
+      </if>
+      <if test="recordStatus != null">
+        record_status = #{recordStatus,jdbcType=CHAR},
+      </if>
+        update_time = now(),
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where dict_id = #{dictId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.sk.mask.sys.pojo.SysDict">
+    update tb_sys_dict
+    set dict_type = #{dictType,jdbcType=VARCHAR},
+      dict_code = #{dictCode,jdbcType=VARCHAR},
+      code_name = #{codeName,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      field_1 = #{field1,jdbcType=VARCHAR},
+      field_2 = #{field2,jdbcType=VARCHAR},
+      field_3 = #{field3,jdbcType=VARCHAR},
+      field_4 = #{field4,jdbcType=VARCHAR},
+      field_5 = #{field5,jdbcType=VARCHAR},
+      field_6 = #{field6,jdbcType=VARCHAR},
+      record_status = #{recordStatus,jdbcType=CHAR},
+      update_time = now(),
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where dict_id = #{dictId,jdbcType=INTEGER}
+  </update>
+
+
+  <!--以下是自定义的-->
+
+  <!-- 表与实体映射 -->
+  <resultMap id="ResultMapCustom" type="cn.sk.mask.sys.pojo.SysDictCustom" extends="BaseResultMap">
+
+  </resultMap>
+
+  <!-- 查询条件的sql片段 -->
+
+  <sql id="base_query_condition">
+    <if test="null != sysDictCustom">
+      <!-- ${}拼接字符串，有sql注入的维修，少用-->
+      <if test="isNoLike.dictType">
+        <if test="null != sysDictCustom.dictType and '' != sysDictCustom.dictType">
+          AND dict_type = #{sysDictCustom.dictType,jdbcType=VARCHAR}
+        </if>
+      </if>
+      <if test="!isNoLike.dictType">
+        <if test="null != sysDictCustom.dictType and '' != sysDictCustom.dictType">
+          AND dict_type LIKE CONCAT('%',CONCAT(#{sysDictCustom.dictType,jdbcType=VARCHAR},'%'))
+        </if>
+      </if>
+      <if test="null != sysDictCustom.dictCode and '' != sysDictCustom.dictCode">
+        AND dict_code = #{sysDictCustom.dictCode,jdbcType=VARCHAR}
+      </if>
+      <if test="null != sysDictCustom.recordStatus and '' != sysDictCustom.recordStatus">
+        AND record_status = #{sysDictCustom.recordStatus,jdbcType=VARCHAR}
+      </if>
+    </if>
+  </sql>
+
+  <!--根据条件查询-->
+  <select id="selectListByQueryVo" parameterType="cn.sk.mask.sys.pojo.SysDictQueryVo" resultMap="ResultMapCustom">
+    select
+    <include refid="Base_Column_List" />
+    from tb_sys_dict
+    <where>
+      <!-- 引用sql片段 的id,如果refid指定的id不在本mapper文件中,要前边加namespace -->
+      <include refid="base_query_condition"></include>
+      AND record_status != '00'
+    </where>
+    <include refid="cn.sk.mask.base.mapper.IBaseMapper.base_order"/>
+  </select>
+
+  <!--根据主键软删除-->
+  <update id="deleteInIds">
+    update tb_sys_dict
+    set record_status = #{recordStatus,jdbcType=VARCHAR}
+    <where>
+      dict_id IN
+      <foreach collection="pks" open="(" close=")" separator="," item="pk">
+        #{pk}
+      </foreach>
+    </where>
+  </update>
+
+  <!--根据主键硬删除-->
+  <delete id="realDeleteInIds">
+    delete from tb_sys_dict
+    <where>
+      dict_id IN
+      <foreach collection="pks" open="(" close=")" separator="," item="pk">
+        #{pk}
+      </foreach>
+    </where>
+  </delete>
+</mapper>

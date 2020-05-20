@@ -1,0 +1,348 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/common :: common_header(~{::title},~{},~{},~{})">
+    <!--title,metas,links,scripts-->
+    <title>系统用户列表</title>
+</head>
+<body>
+<!--刷新栏开始-->
+<nav th:replace="common/common :: freshNav(~{::path})">
+    <path>
+        <span class="c-gray en">&gt;</span> 系统用户管理
+        <span class="c-gray en">&gt;</span> 系统用户列表
+    </path>
+</nav>
+<!--刷新栏结束-->
+
+<!--*********************-->
+
+<!--数据显示开始-->
+<div class="page-container">
+
+    <!--搜索栏开始-->
+    <!--<div class="text-c">-->
+    <div style="margin:5px 5px 5px">
+        用户名：
+        <input type="text" class="input-text" style="width:200px" placeholder="输入用户名" id="userName">
+        <button type="submit" class="btn btn-success radius" id="searchBtn" name=""><i class="Hui-iconfont">&#xe665;</i>
+            查询
+        </button>
+    </div>
+    <!--搜索栏结束-->
+
+    <!--*********************-->
+
+    <!--按钮栏开始-->
+    <div class="cl pd-5 bg-1 bk-gray mt-20">
+        <span class="l">
+        <a id="addBtn"
+           class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加用户</a>
+            <a id="batchDel"
+               class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
+            <a id="batchRealDel"
+               class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量硬删除</a>
+        </span>
+        <!--<span-->
+        <!--class="r">共有数据：<strong>88</strong> 条</span>-->
+    </div>
+    <!--按钮栏结束-->
+
+    <!--*********************-->
+
+    <!--表格区域开始-->
+    <div class="mt-20">
+        <table id="skDataTable" class="table table-border table-bordered table-hover table-bg table-sort">
+            <thead>
+            <tr class="text-c">
+                <th width="25"><input type="checkbox" id="checkbox" name="checkbox" class="checkall"/></th>
+                <th width="60">用户名</th>
+                <th width="60">姓名</th>
+                <th width="40">性别</th>
+                <th width="60">手机</th>
+                <th width="80">邮箱</th>
+                <th width="80">创建时间</th>
+                <th width="50">状态</th>
+                <th width="100">操作</th>
+            </tr>
+            </thead>
+            <tbody class="text-c">
+            <!--<tr style="text-align:center">-->
+            <!--<td colspan="16">暂无数据</td>-->
+            <!--</tr>-->
+
+            </tbody>
+        </table>
+    </div>
+</div>
+<!--数据显示结束-->
+
+<!--*********************-->
+
+<!--_footer 作为公共模版分离出去-->
+<div th:replace="common/common :: common_footer">
+</div>
+<!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/My97DatePicker/4.8/WdatePicker.js}"></script>
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/datatables/1.10.0/jquery.dataTables.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/laypage/1.2/laypage.js}"></script>
+<script th:inline="none" type="text/javascript">
+
+    //主键
+    var pk = 'uId';
+
+    //禁用记录
+    function updateDisableRs(obj, id) {
+        layer.confirm('确认要禁用吗？', function (index) {
+            var url = "updateRecordStatus";
+            var param = {recordStatus: '02'};
+            param[pk] = id;
+            sk.ajaxRequest(url, param, function (r) {
+                if (r.code == '0') {
+                    $(obj).parents("tr").find("#td-manage").prepend('<a title="启用" href="javascript:;" onclick="updateAbleRs(this,' + id + ')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe615;</i></a>');
+
+                    $.each(recordStatus,function (index,item) {
+//                            console.log(JSON.stringify(item))
+                        if (item.code == skConst.RecordStatus.DISABLE){
+                            $(obj).parents("tr").find("#td-status").html('<span class="label radius">'+item.name+'</span>');
+                            return false;
+                        }
+                    });
+                    $(obj).remove();
+
+                    sk.failFaceMsg(r.msg);
+                } else {
+                    sk.failMsg(r.msg);
+                }
+
+            });
+        });
+
+    }
+
+    //启用记录
+    function updateAbleRs(obj, id) {
+        layer.confirm('确认要启用吗？', function (index) {
+            var url = "updateRecordStatus";
+            var param = {recordStatus: '01'};
+            param[pk] = id;
+            sk.ajaxRequest(url, param, function (r) {
+                if (r.code == '0') {
+                    $(obj).parents("tr").find("#td-manage").prepend('<a title="禁用" href="javascript:;" onclick="updateDisableRs(this,' + id + ')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe631;</i></a>');
+                    $.each(recordStatus,function (index,item) {
+//                            console.log(JSON.stringify(item))
+                        if (item.code == skConst.RecordStatus.ABLE){
+                            $(obj).parents("tr").find("#td-status").html('<span class="label label-success radius">'+item.name+'</span>');
+                            return false;
+                        }
+                    });
+                    $(obj).remove();
+                    sk.successFaceMsg(r.msg);
+                } else {
+                    sk.failMsg(r.msg);
+                }
+
+            });
+        });
+
+    }
+
+    //修改
+    function to_edit(id) {
+        var url = "initUpdate?"+pk+"=" + id;
+        layer_show("修改角色", url, 800, 600);
+    }
+
+
+    //修改密码
+    function updatePassword(id) {
+        var url = "initUpdatePassword?"+pk+"=" + id;
+        layer_show("修改密码", url, 500, 400);
+    }
+
+    //删除
+    function to_del(obj, id) {
+        layer.confirm('确认要删除吗？', function (index) {
+            var url = "delete";
+            var param = {ids: [id]};
+            sk.ajaxRequest(url, param, function (r) {
+                if (r.code == '0') {
+                    $(obj).parents("tr").remove();
+                    sk.successMsg(r.msg);
+                } else {
+                    sk.failMsg(r.msg);
+                }
+
+            });
+        });
+    }
+
+    $(function () {
+        //添加按钮
+        $('#addBtn').on('click', function () {
+            layer_show('添加用户', 'initAdd', 800, 600);
+        });
+        //批量删除
+        $('#batchDel').on('click', function () {
+            if ($(".checkchild:checked").length < 1) {
+                sk.successFaceMsg('请选择要提交的记录!');
+                return;
+            }
+            //获取所有选中的id
+            var ids = [];
+            $.each($('input:checkbox:checked'), function () {
+                if ($(this).val().trim() == "on") {
+                    return;
+                }
+                ids.push($(this).val().trim());
+            });
+            layer.confirm('确认要批量删除吗？', function (index) {
+                layer.close(index);
+                var url = "delete";
+                var param = {ids: ids};
+                sk.ajaxRequest(url, param, function (r) {
+                    if (r.code == '0') {
+//                        $(obj).parents("tr").remove();
+                        $.each($('input:checkbox:checked'), function () {
+                            if ($(this).val().trim() == "on") {
+                                return;
+                            }
+                            $(this).parents("tr").remove();
+                        });
+                        sk.successMsg(r.msg);
+                    } else {
+                        sk.failMsg(r.msg);
+                    }
+
+                });
+            });
+        });
+        //批量硬删除
+        $('#batchRealDel').on('click', function () {
+            if ($(".checkchild:checked").length < 1) {
+                sk.successFaceMsg('请选择要提交的记录!');
+                return;
+            }
+            //获取所有选中的id
+            var ids = [];
+            $.each($('input:checkbox:checked'), function () {
+                if ($(this).val().trim() == "on") {
+                    return;
+                }
+                ids.push($(this).val().trim());
+            });
+            layer.confirm('这个操作很危险，确认要批量硬删除吗？', function (index) {
+                layer.close(index);
+                var url = "realDelete";
+                var param = {ids: ids};
+                sk.ajaxRequest(url, param, function (r) {
+                    if (r.code == '0') {
+//                        $(obj).parents("tr").remove();
+                        $.each($('input:checkbox:checked'), function () {
+                            if ($(this).val().trim() == "on") {
+                                return;
+                            }
+                            $(this).parents("tr").remove();
+                        });
+                        sk.successMsg(r.msg);
+                    } else {
+                        sk.failMsg(r.msg);
+                    }
+
+                });
+            });
+        });
+
+        var _dataTables = $('#skDataTable').DataTable({
+            "lengthChange": true,
+            "searching": false,//禁用检索
+            "ordering": false,
+            "autoWidth": false,
+            'pagingType': 'full_numbers',
+            "pageLength": 10,
+            "serverSide": true,
+            "bInfo": true, //是否显示页脚信息，DataTables插件左下角显示记录数
+            "bProcessing": true, //DataTables载入数据时，是否显示‘进度’提示
+            "oLanguage": { //国际化配置
+                //"sInfo" : "从 _START_ 到  _END_ 条记录 总记录数为 _TOTAL_ 条",
+                //"sInfoEmpty" : "记录数为0",
+                "sInfoFiltered": "(每页 _MAX_ 条)",
+            },
+            "columns": [
+                {
+                    "data": function (dd) {
+                        return '<input type="checkbox" id="empId" name="empId" class="checkchild"  value="' + dd.uId + '" />';
+                    }
+                },
+                {"data": "userName"},
+                {"data": "realName"},
+                {"data": "sex"},
+                {"data": "mobilePhone"},
+                {"data": "email"},
+                {
+                    "data": "createTime", "render": function (data) {
+                    //时间格式化
+                    return moment(data).format(skConst.DEFALT_DATE_FORMAT);
+                }
+                },
+                {
+                    "data": "recordStatus", "render": function (data) {
+                        var htmlStr = '<div id="td-status"><span class="label ';
+                        if (data == '01') {
+                            //启用
+                            htmlStr += 'label-success radius">';
+
+                        } else {
+                            //禁用
+                            htmlStr += 'radius">';
+                        }
+                        $.each(recordStatus,function (index,item) {
+//                            console.log(JSON.stringify(item))
+                            if (item.code == data){
+                                htmlStr += item.name+'</span></div>';
+                                return false;
+                            }
+                        });
+                    return htmlStr;
+                    }
+                },
+                {
+                    "data": function (dd) {
+                        var str = '<div id="td-manage">';
+                        if (dd.recordStatus == '01') {
+                            str += '<a title="禁用" href="javascript:;" onclick="updateDisableRs(this,' + dd.uId + ')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe631;</i></a>';
+                        } else {
+                            str += '<a title="启用" href="javascript:;" onclick="updateAbleRs(this,' + dd.uId + ')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe615;</i></a>';
+                        }
+
+                        str += '<a title="修改" href="javascript:;" onclick="to_edit(' + dd.uId + ')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a>';
+                        str += '<a title="修改密码" href="javascript:;" onclick="updatePassword(' + dd.uId + ')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe63f;</i></a>';
+                        str += '<a title="删除" href="javascript:;" onclick="to_del(this,' + dd.uId + ')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>';
+                        str += '</div>';
+                        return str;
+                    }
+                }
+            ],
+            "ajax": {
+                "url": "query",
+                "type": "POST",
+                "data": function (d) {
+                    d['sysUserCustom.userName'] = $("#userName").val().trim();
+
+                }
+            },
+        });
+
+        //搜索按钮点击事件
+        $('#searchBtn').on('click', function () {
+//            $("input[type=checkbox][name='checkbox']").prop('checked', false);
+            _dataTables.ajax.reload();
+        });
+
+    });
+
+
+</script>
+</body>
+</html>

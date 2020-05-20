@@ -1,0 +1,147 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sk="http://www.w3.org/1999/xhtml">
+<head th:replace="common/common :: common_header(~{::title},~{},~{},~{})">
+    <!--title,metas,links,scripts-->
+    <title>系统日志列表</title>
+</head>
+<body>
+<!--刷新栏开始-->
+<sk:navBar navText="系统日志管理,系统日志列表"/>
+<!--刷新栏结束-->
+
+<!--*********************-->
+
+<!--数据显示开始-->
+<div class="page-container">
+
+    <!--搜索栏开始-->
+    <!--<div class="text-c">-->
+    <div style="margin:5px 5px 5px">
+        操作：
+        <sk:input style="width:200px" placeholder="输入操作" id="operation"/>
+        操作者：
+        <sk:input style="width:200px" placeholder="输入操作者" id="userName"/>
+        操作时间：
+        <sk:input style="width:200px;height:30px;" id="startCreatTime" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="Wdate"/>
+        - <sk:input style="width:200px;height:30px;" id="endCreatTime" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="Wdate"/>
+        <sk:button class="btn-success" id="searchBtn" text="查询" dictType="oprt_icon" dictCode="04"/>
+    </div>
+    <!--搜索栏结束-->
+
+    <!--*********************-->
+
+    <!--按钮栏开始-->
+    <div class="cl pd-5 bg-1 bk-gray mt-20">
+        <span class="l">
+            <sk:aBtn onclick="batchDel()" class="btn-danger" text="批量删除" dictType="oprt_icon" dictCode="03"/>
+            <sk:aBtn onclick="batchRealDel()" class="btn-danger" text="批量硬删除" dictType="oprt_icon" dictCode="03"/>
+        </span>
+        <!--<span-->
+        <!--class="r">共有数据：<strong>88</strong> 条</span>-->
+    </div>
+    <!--按钮栏结束-->
+
+    <!--*********************-->
+
+    <!--表格区域开始-->
+    <div class="mt-20">
+        <table id="skDataTable" class="table table-border table-bordered table-hover table-bg table-sort">
+            <thead>
+            <tr class="text-c">
+                <th width="25"><input type="checkbox" id="checkbox" name="checkbox" class="checkall"/></th>
+                <th width="60">请求地址</th>
+                <th width="40">请求方式</th>
+                <th width="60">ip</th>
+                <th width="90">方法名</th>
+                <th width="60">参数</th>
+                <th width="100">操作</th>
+                <th width="60">操作者</th>
+                <th width="90">操作时间</th>
+                <th width="20">操作</th>
+            </tr>
+
+            </thead>
+            <tbody class="text-c">
+            <!--<tr style="text-align:center">-->
+            <!--<td colspan="16">暂无数据</td>-->
+            <!--</tr>-->
+
+            </tbody>
+        </table>
+    </div>
+</div>
+<!--数据显示结束-->
+
+<!--*********************-->
+
+<!--_footer 作为公共模版分离出去-->
+<div th:replace="common/common :: common_footer">
+</div>
+<!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/My97DatePicker/4.8/WdatePicker.js}"></script>
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/datatables/1.10.0/jquery.dataTables.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/H-ui.admin/lib/laypage/1.2/laypage.js}"></script>
+<script th:inline="none" type="text/javascript">
+    //主键
+    var pk = 'id';
+    //模块标题
+    var modelTile = '日志';
+
+
+    $(function () {
+        var _dataTables = SkDataTable('#skDataTable', {
+            "pageLength": 5,
+            "columns": [
+                {
+                    "data": function (dd) {
+                        return '<input type="checkbox" id="id" name="id" class="checkchild"  value="' + dd.id + '" />';
+                    }
+                },
+                {"data": "requestUrl"},
+                {"data": "requestType"},
+                {"data": "ip"},
+                {"data": "methodName"},
+                {"data": "params"},
+                {"data": "operation"},
+                {"data": "userName"},
+                {
+                    "data": "createTime", "render": function (data) {
+                        //时间格式化
+                        return moment(data).format(skConst.DEFALT_DATE_FORMAT);
+                    }
+                },
+                {
+                    "data": function (dd) {
+                        var str = '<div id="td-manage">';
+                        str += '<a title="删除" href="javascript:;" onclick="to_del(this,' + dd.id + ')" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>';
+                        str += '</div>';
+                        return str;
+                    }
+                }
+            ],
+            "ajax": {
+                // "url": "query",
+                // "type": "POST",
+                "data": function (d) {
+                    d['sysLogCustom.operation'] = $("#operation").val().trim();
+                    d['sysLogCustom.userName'] = $("#userName").val().trim();
+                    d['startCreatTime'] = $("#startCreatTime").val().trim();
+                    d['endCreatTime'] = $("#endCreatTime").val().trim();
+                }
+            },
+        });
+
+        //搜索按钮点击事件
+        $('#searchBtn').on('click', function () {
+//            $("input[type=checkbox][name='checkbox']").prop('checked', false);
+            _dataTables.ajax.reload();
+        });
+
+    });
+
+
+</script>
+</body>
+</html>
