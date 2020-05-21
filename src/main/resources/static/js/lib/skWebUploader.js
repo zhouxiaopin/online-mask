@@ -113,6 +113,12 @@ function SkWebUploader(opt) {
     this.thumbnailHeight = skExpand.thumbnailHeight || 110 * ratio;
     // 添加的文件数量
     this.fileCount = 0;
+    // 初始的文件数量
+    this.initFileCount = 0;
+    var labels = ['图片','视频','文件'];
+    var labelUnits = ['张','个','个'];
+    this.label = labels[opt.labelType||0];
+    this.labelUnit = labelUnits[opt.labelType||0];
     // 添加的文件总大小
     this.fileSize = 0;
     this.$uploadMainContainer = $(skExpand.containerId);
@@ -133,11 +139,10 @@ function SkWebUploader(opt) {
     this.$continueAdd = this.$uploadMainContainer.find('.continueAdd');
     //已经上传的文件名
     this.fileNames = [];
-
     this.uploader = WebUploader.create({
         pick: opt.pick||{
-                id: skExpand.containerId+' .filePicker',
-                label: '点击选择图片'
+            id: skExpand.containerId+' .filePicker',
+            label: '点击选择'+$this.label
         },
         formData: opt.formData||{},
         fileVal:opt.fileVal||'file',//上传字段名
@@ -163,17 +168,7 @@ function SkWebUploader(opt) {
         fileSizeLimit: opt.fileSizeLimit||200 * 1024 * 1024,    // 200 M
         fileSingleSizeLimit: opt.fileSingleSizeLimit||50 * 1024 * 1024    // 50 M
     });
-    this.addFile = addFile;
-    this.removeFile = removeFile;
-    this.updateStatus = updateStatus;
-    this.updateTotalProgress = updateTotalProgress;
-    this.setState = setState;
-    this.isUpload = function () {
-        if (this.state === 'finish' || this.uploader.getFiles().length <= 0){
-            return false;
-        }
-        return true;
-    };
+    initMethod(this);
     // 添加“添加文件”的按钮，
     this.uploader.addButton({
         id: skExpand.containerId+' .continueAdd',
@@ -234,9 +229,16 @@ function SkWebUploader(opt) {
             $this.$placeHolder.addClass( 'element-invisible' );
             $this.$statusBar.show();
         }
-
+        // console.log(file);
         $this.addFile(file);
-        $this.setState( 'ready' );
+        if ('state-complete' == file.clazz){//修改界面用到
+            $this.setState( 'ready' );
+            $this.setState( 'complete' );
+            $('#'+file.id).append( '<span class="success"></span>' );
+        }else{
+            $this.setState( 'ready' );
+        }
+
         $this.updateTotalProgress();
     };
     //当文件上传成功时触发。
@@ -306,7 +308,24 @@ function SkWebUploader(opt) {
     this.dragEl = null;
     init(this)
 }
+function initMethod($this) {
 
+    $this.addFile = addFile;
+    $this.removeFile = removeFile;
+    $this.updateStatus = updateStatus;
+    $this.updateTotalProgress = updateTotalProgress;
+    $this.setState = setState;
+    $this.initList = initList;
+    //判断是否已经全部上传
+    $this.isUpload = function () {
+        if (this.state === 'finish' || this.uploader.getFiles().length <= 0){
+            return true;
+        }
+        return false;
+    };
+
+
+}
 function init($this) {
     /*文件item相关事件开始*/
     var $fileListUl = $this.$uploadMainContainer.find('.filelist' );
@@ -361,13 +380,23 @@ function init($this) {
 
     });
     /*文件item相关事件结束*/
+    if ($this.skExpand.httpPrefix){
+        $this.initList($this.skExpand.httpPrefix);
+    }
+
 }
 
 // 当有文件添加进来时执行，负责view的创建
 function addFile(file) {
+
+    if ('init'==file.statusText){
+        this.uploader.skipFile(file);
+    }
     var $this = this;
-    var $li = $( '<li><span id="' + file.id + '">' +
-        '<p class="title">' + file.name + '</p>' +
+    var clazz = file.clazz||'';
+    var filePath = file.filePath?'name="'+file.filePath+'"':'';
+    var $li = $( '<li><span id="' + file.id + '" class="'+clazz+'">' +
+        '<p class="title" '+filePath+'>' + file.name + '</p>' +
         '<p class="imgWrap"></p>'+
         '<p class="progress"><span></span></p>' +
         '</span></li>' ),
@@ -537,6 +566,9 @@ function updateFieldVal($this,file){
 // 负责view的销毁
 function removeFile(file) {
     var $li = $('#'+file.id).parent();
+    if ('init'==file.statusText){
+        this.initFileCount--;
+    }
 
     delete this.percentages[ file.id ];
     this.updateTotalProgress();
@@ -549,23 +581,23 @@ function updateStatus() {
     var text = '', stats;
 
     if ( this.state === 'ready' ) {
-        text = '选中' + this.fileCount + '张图片，共' +
+        text = '选中' + this.fileCount + this.labelUnit+this.label+'，共' +
             WebUploader.formatSize( this.fileSize ) + '。';
     } else if ( this.state === 'confirm' ) {
         stats = this.uploader.getStats();
         if ( stats.uploadFailNum ) {
-            text = '已成功上传' + stats.successNum+ '张照片至XX相册，'+
-                stats.uploadFailNum + '张照片上传失败，<a class="retry" href="#">重新上传</a>失败图片或<a class="ignore" href="#">忽略</a>'
+            text = '已成功上传' + (stats.successNum+this.initFileCount)+this.labelUnit+this.label+'至服务器，'+
+                stats.uploadFailNum + this.labelUnit+this.label+'上传失败，<a class="retry" href="#">重新上传</a>失败'+this.label+'或<a class="ignore" href="#">忽略</a>'
         }
 
     } else {
         stats = this.uploader.getStats();
-        text = '共' + this.fileCount + '张（' +
+        text = '共' + this.fileCount + this.labelUnit+'（' +
             WebUploader.formatSize( this.fileSize )  +
-            '），已上传' + stats.successNum + '张';
+            '），已上传' + (stats.successNum+this.initFileCount) + this.labelUnit;
 
         if ( stats.uploadFailNum ) {
-            text += '，失败' + stats.uploadFailNum + '张';
+            text += '，失败' + stats.uploadFailNum + this.labelUnit;
         }
     }
 
@@ -672,12 +704,12 @@ function setState(val) {
 }
 
 
-var dragEl = null;
+// var dragEl = null;
 /*拖拽相关开始*/
-function domdrugstart($WuThis,e,node) {
+function domdrugstart($wuThis,e,node) {
     // e.target.style.opacity = '0.5';
-    console.log(node)
-    dragEl = node;
+    // console.log(node)
+    $wuThis.dragEl = node;
     e.dataTransfer.effectAllowed = "move";
     e.dataTransfer.setData("text/html", node.innerHTML);
 }
@@ -694,8 +726,8 @@ function domdrop($wuThis,e,node) {
     }
     // console.log()
     // 位置互换
-    if (dragEl != node) {
-        dragEl.innerHTML = node.innerHTML;
+    if ($wuThis.dragEl != node) {
+        $wuThis.dragEl.innerHTML = node.innerHTML;
         node.innerHTML = e.dataTransfer.getData('text/html');
 
         //更新表单域
@@ -714,3 +746,57 @@ function domdrop($wuThis,e,node) {
     // return false;
 }
 /*拖拽相关结束*/
+
+/*初始加载文件相关开始*/
+function getFileBlob (url, cb) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url);
+    xhr.responseType = "blob";
+    xhr.addEventListener('load', function() {
+        cb(xhr.response);
+    });
+    xhr.send();
+}
+function blobToFile(blob, name) {
+    blob.lastModifiedDate = new Date();
+    blob.name = name;
+    return blob;
+}
+function getFileObject(filePathOrUrl, cb) {
+    getFileBlob(filePathOrUrl, function (blob) {
+        var fileName = filePathOrUrl.substring((filePathOrUrl.lastIndexOf('/')+1));
+        cb(blobToFile(blob, fileName));
+    });
+};
+
+//初始化显示的列表
+// var picList = ['图片url','图片url','图片url','图片url' ]
+function initList(imgHttpPrefix) {
+    var $this = this;
+    var fileList = $(this.skExpand.fieldId).val().split(';');
+    // var initFileCount = 0;
+    // var fileCount = 0;
+    // var fileSize = 0;
+    $.each(fileList, function(index,item){
+        if (!item) return;
+        // fileCount++;
+        $this.fileNames.push(item);
+        getFileObject(imgHttpPrefix+item, function(fileObject) {
+            var wuFile = new WebUploader.Lib.File(WebUploader.guid('rt_'),fileObject);
+            var file = new WebUploader.File(wuFile);
+            file.clazz = 'state-complete';
+            file.statusText = 'init';
+            file.filePath = item;
+            // initFileCount++;
+            // $this.fileCount++;
+            // fileSize += file.size;
+            $this.uploader.addFiles(file);
+            // $this.uploader.skipFile(file);
+        })
+    });
+    // this.initFileCount = initFileCount;
+    // this.fileCount = fileCount;
+    // this.fileSize = fileSize;
+    //从队列初始初始文件
+}
+/*初始加载文件相关结束*/

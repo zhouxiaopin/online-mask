@@ -1,18 +1,14 @@
 package com.baidu.ueditor.hunter;
 
+import com.baidu.ueditor.PathFormat;
+import com.baidu.ueditor.define.*;
+import com.baidu.ueditor.upload.StorageManager;
+
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
-import com.baidu.ueditor.PathFormat;
-import com.baidu.ueditor.define.AppInfo;
-import com.baidu.ueditor.define.BaseState;
-import com.baidu.ueditor.define.MIMEType;
-import com.baidu.ueditor.define.MultiState;
-import com.baidu.ueditor.define.State;
-import com.baidu.ueditor.upload.StorageManager;
 
 /**
  * 图片抓取器

@@ -66,7 +66,7 @@
                                 <div class="info"></div>
                                 <div class="btns">
                                     <div  class="continueAdd"></div>
-<!--                                    <div class="uploadBtn">开始上传</div>-->
+                                    <div class="uploadBtn">开始上传</div>
                                 </div>
                             </div>
                         </div>
@@ -178,7 +178,7 @@
                                 <div class="info"></div>
                                 <div class="btns">
                                     <div  class="continueAdd"></div>
-                                    <!--                                    <div class="uploadBtn">开始上传</div>-->
+                                    <div class="uploadBtn">开始上传</div>
                                 </div>
                             </div>
                         </div>
@@ -200,7 +200,7 @@
                                 <div class="info"></div>
                                 <div class="btns">
                                     <div class="continueAdd"></div>
-<!--                                    <div class="uploadBtn">开始上传</div>-->
+                                    <div class="uploadBtn">开始上传</div>
                                 </div>
                             </div>
                         </div>
@@ -396,31 +396,40 @@
                  var index = parent.layer.getFrameIndex(window.name);
                  //parent.$('.btn-refresh').click();
                  parent.layer.close(index);*/
-                return
+                if (mainImgUploader.isUpload()){
+                    sk.failMsg('主图还没有全部提交');
+                    return;
+                }
+                if (subImgUploader.isUpload()){
+                    sk.failMsg('子图还没有全部提交');
+                    return;
+                }
+
                 //加载层-默认风格
                 layer.load();
+                submitForm(form);
                 //先提交图片
-                if (mainImgUploader.isUpload()){
-                    mainImgUploader.uploadClick();
-                    mainImgUploader.onUploadFinished = function(){
-                        if (subImgUploader.isUpload()){
-                            subImgUploader.uploadClick();
-                            subImgUploader.onUploadFinished = function(){
-                                submitForm(form);
-                            };
-                        }else{
-                            submitForm(form);
-                        }
-                    };
-
-                }else if (subImgUploader.isUpload()){
-                    subImgUploader.uploadClick();
-                    subImgUploader.onUploadFinished = function(){
-                        submitForm(form);
-                    };
-                }else{
-                    submitForm(form);
-                }
+                // if (mainImgUploader.isUpload()){
+                //     mainImgUploader.uploadClick();
+                //     mainImgUploader.onUploadFinished = function(){
+                //         if (subImgUploader.isUpload()){
+                //             subImgUploader.uploadClick();
+                //             subImgUploader.onUploadFinished = function(){
+                //                 submitForm(form);
+                //             };
+                //         }else{
+                //             submitForm(form);
+                //         }
+                //     };
+                //
+                // }else if (subImgUploader.isUpload()){
+                //     subImgUploader.uploadClick();
+                //     subImgUploader.onUploadFinished = function(){
+                //         submitForm(form);
+                //     };
+                // }else{
+                //     submitForm(form);
+                // }
 
 
 
@@ -471,41 +480,10 @@
                 skExpand:{
                     containerId:'#mainImgContainer',
                     fieldId:'#mainImage',
+                    httpPrefix:imgHttpPrefix
                 }
             }
         );
-        // var getFileBlob = function (url, cb) {
-        //     var xhr = new XMLHttpRequest();
-        //     xhr.open("GET", url);
-        //     xhr.responseType = "blob";
-        //     xhr.addEventListener('load', function() {
-        //         cb(xhr.response);
-        //     });
-        //     xhr.send();
-        // };
-        //
-        // var blobToFile = function (blob, name) {
-        //     blob.lastModifiedDate = new Date();
-        //     blob.name = name;
-        //     return blob;
-        // };
-        //
-        // var getFileObject = function(filePathOrUrl, cb) {
-        //     getFileBlob(filePathOrUrl, function (blob) {
-        //         cb(blobToFile(blob, 'test.jpg'));
-        //     });
-        // };
-        //
-        // //需要编辑的图片列表
-        // // var picList = ['图片url','图片url','图片url','图片url' ]
-        // var picList = $('#mainImage').val().split(';')
-        // $.each(picList, function(index,item){
-        //     getFileObject(imgHttpPrefix+item, function (fileObject) {
-        //         var wuFile = new WebUploader.Lib.File(WebUploader.guid('rt_'),fileObject);
-        //         var file = new WebUploader.File(wuFile);
-        //         mainImgUploader.uploader.addFiles(file)
-        //     })
-        // });
         var subImgUploader;
         //解决第一无效的问题
         setTimeout(function(){
@@ -523,10 +501,11 @@
                     skExpand:{
                         containerId:'#subImagContainer',
                         fieldId:'#subImages',
+                        httpPrefix:imgHttpPrefix
                     }
                 }
             );
-        },100);
+        },10);
 
         //编辑器
         var productParamEditor = UE.getEditor('productParamEditor');
@@ -543,67 +522,7 @@
         });
 
 
-        // js事件委托
-        // $('#subImagContainer .queueList').get(0).onmousedown = function (event) {
-        //     event = event || window.event;
-        //     // var target = event.target.parentNode.childNodes;
-        //     var childNodes = event.target.parentNode.parentNode.parentNode.childNodes;
-        //     for (var i = 0, len = childNodes.length; i < len; i++) {
-        //         var node = childNodes[i];
-        //         // 获取目标元素
-        //         if (node.nodeName == 'LI') {
-        //             node.addEventListener("dragstart", domdrugstart.bind(node), false);
-        //             node.addEventListener('dragover', domdrugover, false);
-        //             node.addEventListener('drop', domdrop, false);
-        //         }
-        //     }
-        // }
-        // $('#subImagContainer .queueList').get(0).onmousedown = function (event) {
-        //     event = event || window.event;
-        //     // var target = event.target.parentNode.childNodes;
-        //     var childNodes = event.target.parentNode.parentNode.parentNode.childNodes;
-        //     for (var i = 0, len = childNodes.length; i < len; i++) {
-        //         var node = childNodes[i];
-        //         // 获取目标元素
-        //         if (node.nodeName == 'LI') {
-        //             node.addEventListener("dragstart", domdrugstart.bind(node), false);
-        //             node.addEventListener('dragover', domdrugover, false);
-        //             node.addEventListener('drop', domdrop, false);
-        //         }
-        //     }
-        // }
     });
-    /*排序*/
-    // var dragEl = null;
-    //
-    // function domdrugstart(e) {
-    //     // e.target.style.opacity = '0.5';
-    //     dragEl = this;
-    //     console.log(this)
-    //     e.dataTransfer.effectAllowed = "move";
-    //     e.dataTransfer.setData("text/html", this.innerHTML);
-    // }
-    //
-    // function domdrugover(e) {
-    //     if (e.preventDefault) {
-    //         e.preventDefault();
-    //     }
-    //     e.dataTransfer.dropEffect = 'move';
-    //     return false;
-    // }
-    //
-    // function domdrop(e) {
-    //     if (e.stopPropagation) {
-    //         e.stopPropagation();
-    //     }
-    //     console.log(this)
-    //     // 位置互换
-    //     if (dragEl != this) {
-    //         dragEl.innerHTML = this.innerHTML;
-    //         this.innerHTML = e.dataTransfer.getData('text/html');
-    //     }
-    //     return false;
-    // }
 
     (function( $ ){
         // 当domReady的时候开始初始化
