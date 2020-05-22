@@ -318,7 +318,7 @@ function initMethod($this) {
     $this.initList = initList;
     //判断是否已经全部上传
     $this.isUpload = function () {
-        if (this.state === 'finish' || this.uploader.getFiles().length <= 0){
+        if (this.state === 'finish' || (this.uploader.getFiles().length-this.initFileCount) <= 0){
             return true;
         }
         return false;
@@ -566,9 +566,9 @@ function updateFieldVal($this,file){
 // 负责view的销毁
 function removeFile(file) {
     var $li = $('#'+file.id).parent();
-    if ('init'==file.statusText){
-        this.initFileCount--;
-    }
+    // if ('init'==file.statusText){
+    //     this.initFileCount--;
+    // }
 
     delete this.percentages[ file.id ];
     this.updateTotalProgress();
@@ -774,27 +774,37 @@ function getFileObject(filePathOrUrl, cb) {
 function initList(imgHttpPrefix) {
     var $this = this;
     var fileList = $(this.skExpand.fieldId).val().split(';');
-    // var initFileCount = 0;
+    var fileLi = {};
     // var fileCount = 0;
     // var fileSize = 0;
     $.each(fileList, function(index,item){
         if (!item) return;
         // fileCount++;
         $this.fileNames.push(item);
+        console.log(item);
+        var $fileListUl = $this.$uploadMainContainer.find('.queueList ul.filelist');
         getFileObject(imgHttpPrefix+item, function(fileObject) {
             var wuFile = new WebUploader.Lib.File(WebUploader.guid('rt_'),fileObject);
             var file = new WebUploader.File(wuFile);
+            console.log(file);
             file.clazz = 'state-complete';
             file.statusText = 'init';
             file.filePath = item;
-            // initFileCount++;
+            $this.initFileCount++;
             // $this.fileCount++;
             // fileSize += file.size;
-            $this.uploader.addFiles(file);
-            // $this.uploader.skipFile(file);
+            fileLi[item] = file;
+
+            //最后一个
+            if (fileList.length > 1 && fileList.length == index+1){
+                $.each($this.fileNames, function(index2,item2){
+                    $this.uploader.addFiles(fileLi[item2]);
+                });
+            }else if (fileList.length == 1){
+                $this.uploader.addFiles(file);
+            }
         })
     });
-    // this.initFileCount = initFileCount;
     // this.fileCount = fileCount;
     // this.fileSize = fileSize;
     //从队列初始初始文件

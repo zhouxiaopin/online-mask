@@ -50,6 +50,12 @@
                     </div>
                 </div>
                 <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2"  text="类别："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:treeSelect id="categoryId" name="categoryId" th:value="${obj.categoryId}" type="radio" scCode="category_tree"/>
+                    </div>
+                </div>
+                <div class="row cl">
                     <sk:label class="col-xs-2 col-sm-2"  text="主图："/>
                     <div class="formControls col-xs-4 col-sm-4">
 <!--                        <sk:input th:value="${obj.mainImage}" id="mainImage" name="mainImage"/>-->
@@ -159,6 +165,12 @@
                         [[${obj.subtitleEn}]]
                         </textarea>
                         <!--                        <p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>-->
+                    </div>
+                </div>
+                <div class="row cl">
+                    <sk:label class="col-xs-2 col-sm-2"  text="类别："/>
+                    <div class="formControls col-xs-4 col-sm-4">
+                        <sk:treeSelect id="categoryId" name="categoryId" th:value="${obj.categoryId}" type="radio" scCode="category_tree"/>
                     </div>
                 </div>
                 <div class="row cl">
@@ -396,11 +408,11 @@
                  var index = parent.layer.getFrameIndex(window.name);
                  //parent.$('.btn-refresh').click();
                  parent.layer.close(index);*/
-                if (mainImgUploader.isUpload()){
+                if (!mainImgUploader.isUpload()){
                     sk.failMsg('主图还没有全部提交');
                     return;
                 }
-                if (subImgUploader.isUpload()){
+                if (!subImgUploader.isUpload()){
                     sk.failMsg('子图还没有全部提交');
                     return;
                 }

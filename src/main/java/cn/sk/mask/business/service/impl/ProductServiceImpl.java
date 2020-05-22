@@ -7,6 +7,7 @@ import cn.sk.mask.business.pojo.ProductCustom;
 import cn.sk.mask.business.pojo.ProductQueryVo;
 import cn.sk.mask.business.service.IProductService;
 import cn.sk.mask.sys.vo.DataTableVo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,10 @@ public class ProductServiceImpl extends BaseServiceImpl<ProductCustom, ProductQu
         List<ProductCustom> data = dataTableVo.getData();
         for(int i = 0,len = data.size(); i < len; i++) {
             ProductCustom productCustom = data.get(i);
-            productCustom.setMainImage(basePath+Const.UPLOAD_IMG_PATH+productCustom.getMainImage());
+            String mainImage = productCustom.getMainImage();
+            if(StringUtils.isNotBlank(mainImage)){
+                productCustom.setMainImage(basePath+ Const.UPLOAD_IMG_PATH+mainImage);
+            }
 //            productCustom.setMainImage(imgHttpPrefix+Const.UPLOAD_IMG_PATH+productCustom.getMainImage());
         }
 
