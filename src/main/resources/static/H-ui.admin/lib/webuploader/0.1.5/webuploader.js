@@ -754,6 +754,8 @@
             retry: 'retry',
             isInProgress: 'is-in-progress',
             makeThumb: 'make-thumb',
+            makeVideo:'make-video',
+            makeFile:'make-file',
             md5File: 'md5-file',
             getDimension: 'get-dimension',
             addButton: 'add-btn',
@@ -2270,6 +2272,33 @@
                     file._meta && image.meta( file._meta );
                     image.loadFromBlob( file.source );
                 });
+            },
+            makeVideo: function( file, cb, width, height ) {
+
+                format=file.name.substr(-4,4);
+                if(format=='.mp4')
+                {
+                    var windowURL = window.URL || window.webkitURL;
+                    var videoURL = windowURL.createObjectURL(file['_events'][0].ctx2.source.source);
+                    cb( false, videoURL );
+                }else{
+                    cb(true)
+                }
+
+
+            },
+            makeFile: function( file, cb, width, height ) {
+
+                try {
+                    format=file.name.substr(-4,4);
+                    var windowURL = window.URL || window.webkitURL;
+                    var url = windowURL.createObjectURL(file['_events'][0].ctx2.source.source);
+                    cb( false, url );
+                }catch (e) {
+                    cb(true);
+                }
+
+
             },
     
             beforeSendFile: function( file ) {

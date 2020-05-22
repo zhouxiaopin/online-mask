@@ -372,7 +372,7 @@
 <script type="text/javascript" th:src="@{/static/H-ui.admin/lib/jquery.validation/1.14.0/validate-methods.js}"></script>
 <script type="text/javascript" th:src="@{/static/H-ui.admin/lib/jquery.validation/1.14.0/messages_zh.js}"></script>
 <script type="text/javascript" th:src="@{/static/H-ui.admin/lib/zTree/v3/js/jquery.ztree.all-3.5.min.js}"></script>
-<script type="text/javascript"  th:src="@{/static/H-ui.admin/lib/webuploader/0.1.5/webuploader.min.js}"></script>
+<script type="text/javascript"  th:src="@{/static/H-ui.admin/lib/webuploader/0.1.5/webuploader.js}"></script>
 <script type="text/javascript"  th:src="@{/static/js/lib/skWebUploader.js}"></script>
 <script type="text/javascript" th:src="@{/static/H-ui.admin/lib/ueditor/1.4.3/ueditor.config.js}"></script>
 <script type="text/javascript" th:src="@{/static/H-ui.admin/lib/ueditor/1.4.3/ueditor.all.js}"> </script>
@@ -482,6 +482,7 @@
                 formData: {
                     pathType: '1'
                 },
+                labelType: 1,
                 dnd: '#mainImgContainer .dndArea',
                 paste: '#uploader',
                 chunked: false,
@@ -489,6 +490,11 @@
                 // 禁掉全局的拖拽功能。这样不会出现图片拖进页面的时候，把图片打开。
                 disableGlobalDnd: true,
                 fileNumLimit:1,
+                accept: {
+                    title: 'Video',
+                    extensions: 'mp4',      // 可以多个后缀，以逗号分隔， 不要有空格
+                    mimeTypes: 'video/*'
+                },
                 skExpand:{
                     containerId:'#mainImgContainer',
                     fieldId:'#mainImage',
@@ -504,6 +510,7 @@
                     formData: {
                         pathType: '1'
                     },
+                    labelType: 2,
                     dnd: '#subImagContainer .dndArea',
                     paste: '#uploader',
                     chunked: false,

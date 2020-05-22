@@ -117,8 +117,9 @@ function SkWebUploader(opt) {
     this.initFileCount = 0;
     var labels = ['图片','视频','文件'];
     var labelUnits = ['张','个','个'];
-    this.label = labels[opt.labelType||0];
-    this.labelUnit = labelUnits[opt.labelType||0];
+    this.labelType = opt.labelType||0;
+    this.label = labels[this.labelType];
+    this.labelUnit = labelUnits[this.labelType];
     // 添加的文件总大小
     this.fileSize = 0;
     this.$uploadMainContainer = $(skExpand.containerId);
@@ -401,12 +402,19 @@ function addFile(file) {
         '<p class="progress"><span></span></p>' +
         '</span></li>' ),
 
-        $span = $li.find('#' + file.id),
-        $btns = $('<div class="file-panel">' +
-            '<span class="bt cancel">删除</span>' +
-            '<span class="bt rotateRight">向右旋转</span>' +
-            '<span class="bt rotateLeft">向左旋转</span></div>').appendTo( $span ),
-        $prgress = $span.find('p.progress span'),
+        $span = $li.find('#' + file.id),$btns;
+        if($this.labelType == 0){
+            $btns = $('<div class="file-panel">' +
+                '<span class="bt cancel">删除</span>' +
+                '<span class="bt rotateRight">向右旋转</span>' +
+                '<span class="bt rotateLeft">向左旋转</span></div>').appendTo( $span );
+        }else{
+            $btns = $('<div class="file-panel">' +
+                '<span class="bt cancel">删除</span>' +
+                '</div>').appendTo( $span );
+        }
+
+        var $prgress = $span.find('p.progress span'),
         $uploadMainContainer = $span.find( 'p.imgWrap' ),
         $info = $('<p class="error"></p>'),
 
@@ -433,32 +441,111 @@ function addFile(file) {
     } else {
         // @todo lazyload
         $uploadMainContainer.text( '预览中' );
-        this.uploader.makeThumb( file, function( error, src ) {
-            var img;
+        if (this.labelType == 0){//图片
+            this.uploader.makeThumb( file, function( error, src ) {
+                var img;
 
-            if ( error ) {
-                $uploadMainContainer.text( '不能预览' );
-                return;
-            }
+                if ( error ) {
+                    $uploadMainContainer.text( '不能预览' );
+                    return;
+                }
 
-            if( isSupportBase64 ) {
-                img = $('<img src="'+src+'">');
-                $uploadMainContainer.empty().append( img );
-            } else {
-                $.ajax(basePath +'static/H-ui.admin/lib/webuploader/0.1.5/server/preview.php', {
-                    method: 'POST',
-                    data: src,
-                    dataType:'json'
-                }).done(function( response ) {
-                    if (response.result) {
-                        img = $('<img src="'+response.result+'">');
+                if( isSupportBase64 ) {
+                    img = $('<img src="'+src+'">');
+                    $uploadMainContainer.empty().append( img );
+                } else {
+                    $.ajax(basePath +'static/H-ui.admin/lib/webuploader/0.1.5/server/preview.php', {
+                        method: 'POST',
+                        data: src,
+                        dataType:'json'
+                    }).done(function( response ) {
+                        if (response.result) {
+                            img = $('<img src="'+response.result+'">');
+                            $uploadMainContainer.empty().append( img );
+                        } else {
+                            $uploadMainContainer.text("预览出错");
+                        }
+                    });
+                }
+            }, this.thumbnailWidth, this.thumbnailHeight );
+        }else if (this.labelType == 1){//视频
+            this.uploader.makeVideo( file, function( error, src ) {
+                if ( error ) {
+                    $uploadMainContainer.text( '不能预览' );
+                    return;
+                }else{
+                    // var video='<video  src="' + src + '" controls="controls"></video>'
+                    var video = '<video src="' + src + '" width="'+$this.thumbnailWidth+'" ' +
+                        'height="'+$this.thumbnailHeight+'" controls="controls">\n' +
+                        // '  <source src="' + src + '  type="video/mp4"/>\n' +
+                        '你的浏览器不支持video标签' +
+                        '</video> ';
+                    $uploadMainContainer.empty().append(video);
+                    $uploadMainContainer.css("background-color","#000000");
+                    $("#yesia_video").on("loadeddata", function (e) {
+                        var obj = e.target;
+                        var scale = 0.8;
+                        var canvas = document.createElement("canvas");
+                        canvas.width = obj.videoWidth * scale;
+                        canvas.height = obj.videoHeight * scale;
+                        canvas.getContext('2d').drawImage(obj, 0, 0, canvas.width, canvas.height);
+                        var src= canvas.toDataURL("image/png")
+                        var img = $('<img style="width:110px" src="'+src+'">');
                         $uploadMainContainer.empty().append( img );
-                    } else {
-                        $uploadMainContainer.text("预览出错");
-                    }
-                });
-            }
-        }, this.thumbnailWidth, this.thumbnailHeight );
+                        document.getElementById('first_image').value=src
+
+                    } )
+                }
+
+            }, this.thumbnailWidth, this.thumbnailHeight );
+        }else if (this.labelType == 1){//视频
+            this.uploader.makeVideo( file, function( error, src ) {
+                if ( error ) {
+                    $uploadMainContainer.text( '不能预览' );
+                    return;
+                }else{
+                    // var video='<video  src="' + src + '" controls="controls"></video>'
+                    var video = '<video src="' + src + '" width="'+$this.thumbnailWidth+'" ' +
+                        'height="'+$this.thumbnailHeight+'" controls="controls">\n' +
+                        // '  <source src="' + src + '  type="video/mp4"/>\n' +
+                        '你的浏览器不支持video标签' +
+                        '</video> ';
+
+                    $uploadMainContainer.empty().append(video);
+                    // $uploadMainContainer.css("background-color","#000000");
+                    video.onloadeddata = function (e) {
+                        console.log('aa');
+                        var obj = e.target;
+                        var scale = 0.8;
+                        var canvas = document.createElement("canvas");
+                        canvas.width = obj.videoWidth * scale;
+                        canvas.height = obj.videoHeight * scale;
+                        canvas.getContext('2d').drawImage(obj, 0, 0, canvas.width, canvas.height);
+                        var src= canvas.toDataURL("image/png")
+                        var img = $('<img style="width:110px" src="'+src+'">');
+                        $uploadMainContainer.empty().append( img );
+                        document.getElementById('first_image').value=src
+
+                    };
+                }
+
+            }, this.thumbnailWidth, this.thumbnailHeight );
+        }else if (this.labelType == 2){//文件
+            this.uploader.makeFile( file, function( error, src ) {
+                if ( error ) {
+                    $uploadMainContainer.text( '不能预览' );
+                    return;
+                }else{
+                    // var video='<video  src="' + src + '" controls="controls"></video>'
+                    var a = '<a href="' + src + '"  ' +file.name
+                        '</a> ';
+
+                    $uploadMainContainer.empty().append(a);
+                }
+
+            }, this.thumbnailWidth, this.thumbnailHeight );
+        }
+
 
         this.percentages[ file.id ] = [ file.size, 0 ];
         file.rotation = 0;
