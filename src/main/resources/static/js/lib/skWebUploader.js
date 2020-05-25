@@ -498,35 +498,32 @@ function addFile(file) {
                 }
 
             }, this.thumbnailWidth, this.thumbnailHeight );
-        }else if (this.labelType == 1){//视频
-            this.uploader.makeVideo( file, function( error, src ) {
+        }else if (this.labelType == 2){//文件
+            this.uploader.makeFile( file, function( error, src ) {
                 if ( error ) {
                     $uploadMainContainer.text( '不能预览' );
                     return;
                 }else{
                     // var video='<video  src="' + src + '" controls="controls"></video>'
-                    var video = '<video src="' + src + '" width="'+$this.thumbnailWidth+'" ' +
-                        'height="'+$this.thumbnailHeight+'" controls="controls">\n' +
-                        // '  <source src="' + src + '  type="video/mp4"/>\n' +
-                        '你的浏览器不支持video标签' +
-                        '</video> ';
+                    var a = '<a href="' + src + '" target="_blank" title="'+file.name+'">' + '点击预览'+
+                        '</a> ';
 
-                    $uploadMainContainer.empty().append(video);
+                    $uploadMainContainer.empty().append(a);
                     // $uploadMainContainer.css("background-color","#000000");
-                    video.onloadeddata = function (e) {
-                        console.log('aa');
-                        var obj = e.target;
-                        var scale = 0.8;
-                        var canvas = document.createElement("canvas");
-                        canvas.width = obj.videoWidth * scale;
-                        canvas.height = obj.videoHeight * scale;
-                        canvas.getContext('2d').drawImage(obj, 0, 0, canvas.width, canvas.height);
-                        var src= canvas.toDataURL("image/png")
-                        var img = $('<img style="width:110px" src="'+src+'">');
-                        $uploadMainContainer.empty().append( img );
-                        document.getElementById('first_image').value=src
-
-                    };
+                    // video.onloadeddata = function (e) {
+                    //     console.log('aa');
+                    //     var obj = e.target;
+                    //     var scale = 0.8;
+                    //     var canvas = document.createElement("canvas");
+                    //     canvas.width = obj.videoWidth * scale;
+                    //     canvas.height = obj.videoHeight * scale;
+                    //     canvas.getContext('2d').drawImage(obj, 0, 0, canvas.width, canvas.height);
+                    //     var src= canvas.toDataURL("image/png")
+                    //     var img = $('<img style="width:110px" src="'+src+'">');
+                    //     $uploadMainContainer.empty().append( img );
+                    //     document.getElementById('first_image').value=src
+                    //
+                    // };
                 }
 
             }, this.thumbnailWidth, this.thumbnailHeight );

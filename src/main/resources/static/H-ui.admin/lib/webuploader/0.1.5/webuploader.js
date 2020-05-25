@@ -2274,9 +2274,10 @@
                 });
             },
             makeVideo: function( file, cb, width, height ) {
-
+                console.log(file)
                 format=file.name.substr(-4,4);
-                if(format=='.mp4')
+                // if(format=='.mp4')
+                if(file.type.match( /^video/ ))
                 {
                     var windowURL = window.URL || window.webkitURL;
                     var videoURL = windowURL.createObjectURL(file['_events'][0].ctx2.source.source);
@@ -2288,12 +2289,14 @@
 
             },
             makeFile: function( file, cb, width, height ) {
-
                 try {
-                    format=file.name.substr(-4,4);
-                    var windowURL = window.URL || window.webkitURL;
-                    var url = windowURL.createObjectURL(file['_events'][0].ctx2.source.source);
-                    cb( false, url );
+                    if (file.ext == 'pdf'){
+                        var windowURL = window.URL || window.webkitURL;
+                        var url = windowURL.createObjectURL(file['_events'][0].ctx2.source.source);
+                        cb( false, url );
+                    }else{
+                        cb(true);
+                    }
                 }catch (e) {
                     cb(true);
                 }
