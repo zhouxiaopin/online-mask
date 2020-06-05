@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiresAuthentication
 public class CategoryController extends BaseController<CategoryCustom, CategoryQueryVo> {
     private static final String UPDATE_RECORDSTATUS_OPRT = "updateRecordStatus";
+
     @Autowired
     private ICategoryService categoryService;
 

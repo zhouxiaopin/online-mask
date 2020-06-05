@@ -482,7 +482,7 @@
                 formData: {
                     pathType: '1'
                 },
-                labelType: 1,
+                labelType: 0,
                 dnd: '#mainImgContainer .dndArea',
                 paste: '#uploader',
                 chunked: false,
@@ -490,11 +490,6 @@
                 // 禁掉全局的拖拽功能。这样不会出现图片拖进页面的时候，把图片打开。
                 disableGlobalDnd: true,
                 fileNumLimit:1,
-                accept: {
-                    title: 'Video',
-                    extensions: 'mp4',      // 可以多个后缀，以逗号分隔， 不要有空格
-                    mimeTypes: 'video/*'
-                },
                 skExpand:{
                     containerId:'#mainImgContainer',
                     fieldId:'#mainImage',
@@ -510,7 +505,7 @@
                     formData: {
                         pathType: '1'
                     },
-                    labelType: 2,
+                    labelType: 0,
                     dnd: '#subImagContainer .dndArea',
                     paste: '#uploader',
                     chunked: false,
